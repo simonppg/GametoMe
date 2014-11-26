@@ -7,7 +7,7 @@ package gametome;
 
 /**
  *
- * @author x86
+ * @author simonppg
  */
 public class GametoMe {
 
