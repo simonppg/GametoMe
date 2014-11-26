@@ -9,3 +9,11 @@ Este sera la primera version del juego, por ahora vamos a documentar el proyecto
 TODO
 1.-Organisaremos la documentacion tecnica en doc/src
 2.-Organisaremos la documentacion del juego en doc/game
+
+Herramientas de desarrollo:
+  IDE:            netbeans
+  Motor Grafico:  jmonkeyengine
+  Documentación:  ...
+
+Herramientas de Diseño:
+  ...
