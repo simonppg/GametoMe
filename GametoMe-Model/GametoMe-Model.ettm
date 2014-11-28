@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TypeManagement projectID="DCE.AB8BD2C7-469D-DFDF-D196-CC7CE4D95529">
+	<Locations nextID="1">
+	<Location locID="T.0" href="./GametoMe-Model.etup"/></Locations>
+
+   <Types>
+   <Type id="DCE.B79A80D0-BB87-9977-767E-03CEDB5895F9" location="T.0" name="Unnamed"/></Types>
+
+	<IrresolvableTypes>
+	</IrresolvableTypes>
+
+</TypeManagement>
