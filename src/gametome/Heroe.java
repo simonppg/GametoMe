@@ -16,6 +16,7 @@
  */
 package gametome;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -48,13 +49,21 @@ class Heroe {
      */
     public int velocidadY;
     /**
-     * Velocidad con la que aceleracion.
+     * Velocidad con la que acelera el salto.
      */
-    private int velocidadAceleracion;
+    public int velocidadAceleracionY;
     /**
-     * Velocidad con la que se detiene.
+     * Velocidad con la que se detiene el salto.
      */
-    private int velocidadDetener;
+    private int velocidadDetenerY;
+    /**
+     * Velocidad con la que acelera en x.
+     */
+    public int velocidadAceleracionX;
+    /**
+     * Velocidad con la que se detiene en x.
+     */
+    private int velocidadDetenerX;
     /**
      * Imagen del heroe.
      */
@@ -62,26 +71,31 @@ class Heroe {
     /**
      * Ancho del heroe.
      */
-    private int heroeImgAncho;
+    public int heroeImgAncho;
     /**
      * Alto del heroe.
      */
-    private int heroeImgAlto;
+    public int heroeImgAlto;
+    /**
+     * Determina si el heroe esta saltando
+     */
+    public boolean saltando;
 
     public Heroe() {
         Initialize();
         LoadContent();
         
         x = 400;
-        y = 300;
+        y = 500;
     }
 
     private void Initialize() {
         //TODO Inicializar variables.
-        x = 400;
-        y = 300;
-        velocidadAceleracion = 2;
-        velocidadDetener = 1;
+        saltando = false;
+        velocidadAceleracionY = 1;
+        velocidadDetenerY = 2;
+        velocidadAceleracionX = 2;
+        velocidadDetenerX = 1;
     }
 
     private void LoadContent() {
@@ -97,22 +111,53 @@ class Heroe {
             Logger.getLogger(PlayerRocket.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+    int cont=0;
     public void Update(){
         //TODO Logica del heroe
         
+        if(Panel.keyboardKeyState(KeyEvent.VK_W))
+        {
+            //TODO cambiar cont por alguna medida de tiempo
+            if(cont==0)
+                saltando = true;
+        }
+        
+        if(saltando){
+            //TODO revisar el tiempo
+            if(cont < 15) {
+                velocidadY -= velocidadAceleracionY;
+                cont++;
+            }
+            else {
+                if(y + velocidadY +velocidadDetenerY > 500) {
+                    //velocidadY = y + heroeImgAlto - (int) (FlujoDelJuego.frameHeight * 0.88);
+                    velocidadY = 0;
+                    y = 500;
+                    saltando = false;
+                }
+                else {
+                    velocidadY += velocidadDetenerY;
+                    //cont--;
+                }
+            }
+        }
+        else
+        {
+            velocidadY = 0;
+            cont = 0;
+        }
         
         // Calculating speed for moving or stopping to the left.
         if(Panel.keyboardKeyState(KeyEvent.VK_A))
-            velocidadX -= velocidadAceleracion;
+            velocidadX -= velocidadAceleracionX;
         else if(velocidadX < 0)
-            velocidadX += velocidadDetener;
+            velocidadX += velocidadDetenerX;
         
         // Calculating speed for moving or stopping to the right.
         if(Panel.keyboardKeyState(KeyEvent.VK_D))
-            velocidadX += velocidadAceleracion;
+            velocidadX += velocidadAceleracionX;
         else if(velocidadX > 0)
-            velocidadX -= velocidadDetener;
+            velocidadX -= velocidadDetenerX;
         
         // Moves the rocket.
         x += velocidadX;
@@ -123,5 +168,8 @@ class Heroe {
     {
         //TODO Dibujar al personaje
         g2d.drawImage(heroeImg, x, y, null);
+        g2d.setColor(Color.white);
+        g2d.drawString("Heroe coordinates: " + x + " : " + y, 5, 15);
+        g2d.drawString("Heroe cont: " + cont+" salto: "+ saltando, 5, 30);
     }
 }

@@ -18,11 +18,6 @@ import javax.imageio.ImageIO;
  */
 
 public class Juego {
-
-    /**
-     * The space rocket with which player will have to land.
-     */
-    private PlayerRocket playerRocket;
     
     /**
      * Landing area on which rocket will have to land.
@@ -69,7 +64,6 @@ public class Juego {
      */
     private void Initialize()
     {
-        playerRocket = new PlayerRocket();
         landingArea  = new LandingArea();
         heroe = new Heroe();
     }
@@ -98,7 +92,7 @@ public class Juego {
      */
     public void RestartGame()
     {
-        playerRocket.ResetPlayer();
+        //heroe.ResetPlayer();
     }
     
     /**
@@ -111,6 +105,16 @@ public class Juego {
     {
         //TODO update de los objetos en la escena
         heroe.Update();
+        
+        //TODO fisica del juego
+        
+        //Gravedad
+        /*if(heroe.y + heroe.heroeImgAlto > 500)
+        {
+            //Esto es para darle tiempo a que empice el salto, sin esto el salto no inicia
+            if(heroe.cont==7)
+                heroe.saltando = false;
+        }*/
         
         //TODO verifical si debe cambiar el estado del juego (pause, fin, gana, nueva escena, etc..)
         
@@ -130,8 +134,6 @@ public class Juego {
     {        
         landingArea.Draw(g2d);
         
-        playerRocket.Draw(g2d);
-        
         heroe.Draw(g2d);
     }
     
@@ -148,17 +150,5 @@ public class Juego {
         Draw(g2d, mousePosition);
         
         g2d.drawString("Press space or enter to restart.", FlujoDelJuego.frameWidth / 2 - 100, FlujoDelJuego.frameHeight / 3 + 70);
-        
-        if(playerRocket.landed)
-        {
-            g2d.drawString("You have successfully landed!", FlujoDelJuego.frameWidth / 2 - 100, FlujoDelJuego.frameHeight / 3);
-            g2d.drawString("You have landed in " + gameTime / FlujoDelJuego.secInNanosec + " seconds.", FlujoDelJuego.frameWidth / 2 - 100, FlujoDelJuego.frameHeight / 3 + 20);
-        }
-        else
-        {
-            g2d.setColor(Color.red);
-            g2d.drawString("You have crashed the rocket!", FlujoDelJuego.frameWidth / 2 - 95, FlujoDelJuego.frameHeight / 3);
-            g2d.drawImage(redBorderImg, 0, 0, FlujoDelJuego.frameWidth, FlujoDelJuego.frameHeight, null);
-        }
     }
 }
