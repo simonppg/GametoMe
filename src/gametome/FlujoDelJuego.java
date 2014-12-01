@@ -1,4 +1,4 @@
-package moon_lander;
+package gametome;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -16,9 +16,10 @@ import javax.imageio.ImageIO;
  * Framework that controls the game (Game.java) that created it, update it and draw it on the screen.
  * 
  * @author www.gametutorial.net
+ * @author simonppg
  */
 
-public class Framework extends Canvas {
+public class FlujoDelJuego extends Panel {
     
     /**
      * Width of the frame.
@@ -68,7 +69,7 @@ public class Framework extends Canvas {
     private long lastTime;
     
     // The actual game
-    private Game game;
+    private Juego game;
     
     
     /**
@@ -77,7 +78,7 @@ public class Framework extends Canvas {
     private BufferedImage moonLanderMenuImg;
     
     
-    public Framework ()
+    public FlujoDelJuego ()
     {
         super();
         
@@ -111,11 +112,11 @@ public class Framework extends Canvas {
     {
         try
         {
-            URL moonLanderMenuImgUrl = this.getClass().getResource("/moon_lander/resources/images/menu.jpg");
+            URL moonLanderMenuImgUrl = this.getClass().getResource("/resources/images/menu.jpg");
             moonLanderMenuImg = ImageIO.read(moonLanderMenuImgUrl);
         }
         catch (IOException ex) {
-            Logger.getLogger(Framework.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(FlujoDelJuego.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -216,11 +217,10 @@ public class Framework extends Canvas {
                 game.DrawGameOver(g2d, mousePosition(), gameTime);
             break;
             case MAIN_MENU:
-                g2d.drawImage(moonLanderMenuImg, 0, 0, frameWidth, frameHeight, null);
-                g2d.setColor(Color.white);
+                //g2d.drawImage(moonLanderMenuImg, 0, 0, frameWidth, frameHeight, null);
+                g2d.setColor(Color.blue);
                 g2d.drawString("Use w a d keys to controle the rocket.", frameWidth / 2 - 117, frameHeight / 2);
                 g2d.drawString("Press any key to start the game.", frameWidth / 2 - 100, frameHeight / 2 + 30);
-                g2d.drawString("WWW.GAMETUTORIAL.NET", 7, frameHeight - 5);
             break;
             case OPTIONS:
                 //...
@@ -241,7 +241,7 @@ public class Framework extends Canvas {
         gameTime = 0;
         lastTime = System.nanoTime();
         
-        game = new Game();
+        game = new Juego();
     }
     
     /**

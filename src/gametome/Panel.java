@@ -1,4 +1,4 @@
-package moon_lander;
+package gametome;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -17,9 +17,10 @@ import javax.swing.JPanel;
  * Create a JPanel on which we will draw and listen for keyboard and mouse events.
  * 
  * @author www.gametutorial.net
+ * @author simonppg
  */
 
-public abstract class Canvas extends JPanel implements KeyListener, MouseListener {
+public abstract class Panel extends JPanel implements KeyListener, MouseListener {
     
     // Keyboard states - Here are stored states for keyboard keys - is it down or not.
     private static boolean[] keyboardState = new boolean[525];
@@ -28,7 +29,7 @@ public abstract class Canvas extends JPanel implements KeyListener, MouseListene
     private static boolean[] mouseState = new boolean[3];
         
     
-    public Canvas()
+    public Panel()
     {
         // We use double buffer to draw on the screen.
         this.setDoubleBuffered(true);

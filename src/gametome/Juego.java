@@ -1,4 +1,4 @@
-package moon_lander;
+package gametome;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -14,9 +14,10 @@ import javax.imageio.ImageIO;
  * Actual game.
  * 
  * @author www.gametutorial.net
+ * @author simonppg
  */
 
-public class Game {
+public class Juego {
 
     /**
      * The space rocket with which player will have to land.
@@ -38,10 +39,15 @@ public class Game {
      */
     private BufferedImage redBorderImg;
     
+    /**
+     * Heroe del juego. Clase de nuestro heroe.
+     */
+    private Heroe heroe;
+    
 
-    public Game()
+    public Juego()
     {
-        Framework.gameState = Framework.GameState.GAME_CONTENT_LOADING;
+        FlujoDelJuego.gameState = FlujoDelJuego.GameState.GAME_CONTENT_LOADING;
         
         Thread threadForInitGame = new Thread() {
             @Override
@@ -51,7 +57,7 @@ public class Game {
                 // Load game files (images, sounds, ...)
                 LoadContent();
                 
-                Framework.gameState = Framework.GameState.PLAYING;
+                FlujoDelJuego.gameState = FlujoDelJuego.GameState.PLAYING;
             }
         };
         threadForInitGame.start();
@@ -65,6 +71,7 @@ public class Game {
     {
         playerRocket = new PlayerRocket();
         landingArea  = new LandingArea();
+        heroe = new Heroe();
     }
     
     /**
@@ -74,14 +81,14 @@ public class Game {
     {
         try
         {
-            URL backgroundImgUrl = this.getClass().getResource("/moon_lander/resources/images/background.jpg");
+            URL backgroundImgUrl = this.getClass().getResource("/resources/images/background.jpg");
             backgroundImg = ImageIO.read(backgroundImgUrl);
             
-            URL redBorderImgUrl = this.getClass().getResource("/moon_lander/resources/images/red_border.png");
+            URL redBorderImgUrl = this.getClass().getResource("/resources/images/red_border.png");
             redBorderImg = ImageIO.read(redBorderImgUrl);
         }
         catch (IOException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Juego.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -94,7 +101,6 @@ public class Game {
         playerRocket.ResetPlayer();
     }
     
-    
     /**
      * Update game logic.
      * 
@@ -103,27 +109,15 @@ public class Game {
      */
     public void UpdateGame(long gameTime, Point mousePosition)
     {
-        // Move the rocket
-        playerRocket.Update();
+        //TODO update de los objetos en la escena
+        heroe.Update();
         
-        // Checks where the player rocket is. Is it still in the space or is it landed or crashed?
-        // First we check bottom y coordinate of the rocket if is it near the landing area.
-        if(playerRocket.y + playerRocket.rocketImgHeight - 10 > landingArea.y)
-        {
-            // Here we check if the rocket is over landing area.
-            if((playerRocket.x > landingArea.x) && (playerRocket.x < landingArea.x + landingArea.landingAreaImgWidth - playerRocket.rocketImgWidth))
-            {
-                // Here we check if the rocket speed isn't too high.
-                if(playerRocket.speedY <= playerRocket.topLandingSpeed)
-                    playerRocket.landed = true;
-                else
-                    playerRocket.crashed = true;
-            }
-            else
-                playerRocket.crashed = true;
-                
-            Framework.gameState = Framework.GameState.GAMEOVER;
-        }
+        //TODO verifical si debe cambiar el estado del juego (pause, fin, gana, nueva escena, etc..)
+        
+        /*if(pause)
+            FlujoDelJuego.gameState = FlujoDelJuego.GameState.GAMEOVER;
+        if(fin)
+            FlujoDelJuego.gameState = FlujoDelJuego.GameState.GAMEOVER;*/
     }
     
     /**
@@ -133,12 +127,12 @@ public class Game {
      * @param mousePosition current mouse position.
      */
     public void Draw(Graphics2D g2d, Point mousePosition)
-    {
-        g2d.drawImage(backgroundImg, 0, 0, Framework.frameWidth, Framework.frameHeight, null);
-        
+    {        
         landingArea.Draw(g2d);
         
         playerRocket.Draw(g2d);
+        
+        heroe.Draw(g2d);
     }
     
     
@@ -153,18 +147,18 @@ public class Game {
     {
         Draw(g2d, mousePosition);
         
-        g2d.drawString("Press space or enter to restart.", Framework.frameWidth / 2 - 100, Framework.frameHeight / 3 + 70);
+        g2d.drawString("Press space or enter to restart.", FlujoDelJuego.frameWidth / 2 - 100, FlujoDelJuego.frameHeight / 3 + 70);
         
         if(playerRocket.landed)
         {
-            g2d.drawString("You have successfully landed!", Framework.frameWidth / 2 - 100, Framework.frameHeight / 3);
-            g2d.drawString("You have landed in " + gameTime / Framework.secInNanosec + " seconds.", Framework.frameWidth / 2 - 100, Framework.frameHeight / 3 + 20);
+            g2d.drawString("You have successfully landed!", FlujoDelJuego.frameWidth / 2 - 100, FlujoDelJuego.frameHeight / 3);
+            g2d.drawString("You have landed in " + gameTime / FlujoDelJuego.secInNanosec + " seconds.", FlujoDelJuego.frameWidth / 2 - 100, FlujoDelJuego.frameHeight / 3 + 20);
         }
         else
         {
             g2d.setColor(Color.red);
-            g2d.drawString("You have crashed the rocket!", Framework.frameWidth / 2 - 95, Framework.frameHeight / 3);
-            g2d.drawImage(redBorderImg, 0, 0, Framework.frameWidth, Framework.frameHeight, null);
+            g2d.drawString("You have crashed the rocket!", FlujoDelJuego.frameWidth / 2 - 95, FlujoDelJuego.frameHeight / 3);
+            g2d.drawImage(redBorderImg, 0, 0, FlujoDelJuego.frameWidth, FlujoDelJuego.frameHeight, null);
         }
     }
 }

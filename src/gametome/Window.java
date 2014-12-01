@@ -1,4 +1,4 @@
-package moon_lander;
+package gametome;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -37,7 +37,7 @@ public class Window extends JFrame{
         // Exit the application when user close frame.
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         
-        this.setContentPane(new Framework());
+        this.setContentPane(new FlujoDelJuego());
         
         this.setVisible(true);
     }

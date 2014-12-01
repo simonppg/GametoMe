@@ -1,4 +1,4 @@
-package moon_lander;
+package gametome;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -46,16 +46,16 @@ public class LandingArea {
     private void Initialize()
     {   
         // X coordinate of the landing area is at 46% frame width.
-        x = (int)(Framework.frameWidth * 0.46);
+        x = (int)(FlujoDelJuego.frameWidth * 0.46);
         // Y coordinate of the landing area is at 86% frame height.
-        y = (int)(Framework.frameHeight * 0.88);
+        y = (int)(FlujoDelJuego.frameHeight * 0.88);
     }
     
     private void LoadContent()
     {
         try
         {
-            URL landingAreaImgUrl = this.getClass().getResource("/moon_lander/resources/images/landing_area.png");
+            URL landingAreaImgUrl = this.getClass().getResource("/resources/images/landing_area.png");
             landingAreaImg = ImageIO.read(landingAreaImgUrl);
             landingAreaImgWidth = landingAreaImg.getWidth();
         }
