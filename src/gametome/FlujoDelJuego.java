@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2014 simonppg
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package gametome;
 
 import java.awt.Color;
@@ -13,7 +29,7 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
- * Framework that controls the game (Game.java) that created it, update it and draw it on the screen.
+ * FlujoDelJuego que controla el juego (Juego.java) su creacion, actualizacion y dibujado en la pantalla.
  * 
  * @author www.gametutorial.net
  * @author simonppg
@@ -46,20 +62,20 @@ public class FlujoDelJuego extends Panel {
      * FPS - Frames per second
      * How many times per second the game should update?
      */
-    private final int GAME_FPS = 16;
+    private final int Juego_FPS = 16;
     /**
      * Pause between updates. It is in nanoseconds.
      */
-    private final long GAME_UPDATE_PERIOD = secInNanosec / GAME_FPS;
+    private final long GAME_UPDATE_PERIOD = secInNanosec / Juego_FPS;
     
     /**
      * Possible states of the game
      */
-    public static enum GameState{STARTING, VISUALIZING, GAME_CONTENT_LOADING, MAIN_MENU, OPTIONS, PLAYING, GAMEOVER, DESTROYED}
+    public static enum ESTADO_DEL_JUEGO{INICIANDO, VISUALIZANDO, CARGANDO_CONTENIDO_DEL_JUEGO, MENU_PRINCIPAL, OPCIONES, JUGANDO, FIN_DEL_JUEGO, MUERTO}
     /**
      * Current state of the game
      */
-    public static GameState gameState;
+    public static ESTADO_DEL_JUEGO estadoJuego;
     
     /**
      * Elapsed game time in nanoseconds.
@@ -82,7 +98,7 @@ public class FlujoDelJuego extends Panel {
     {
         super();
         
-        gameState = GameState.VISUALIZING;
+        estadoJuego = ESTADO_DEL_JUEGO.VISUALIZANDO;
         
         //We start game in new thread.
         Thread gameThread = new Thread() {
@@ -135,37 +151,37 @@ public class FlujoDelJuego extends Panel {
         {
             beginTime = System.nanoTime();
             
-            switch (gameState)
+            switch (estadoJuego)
             {
-                case PLAYING:
+                case JUGANDO:
                     gameTime += System.nanoTime() - lastTime;
                     
                     game.UpdateGame(gameTime, mousePosition());
                     
                     lastTime = System.nanoTime();
                 break;
-                case GAMEOVER:
+                case FIN_DEL_JUEGO:
                     //...
                 break;
-                case MAIN_MENU:
+                case MENU_PRINCIPAL:
                     //...
                 break;
-                case OPTIONS:
+                case OPCIONES:
                     //...
                 break;
-                case GAME_CONTENT_LOADING:
+                case CARGANDO_CONTENIDO_DEL_JUEGO:
                     //...
                 break;
-                case STARTING:
+                case INICIANDO:
                     // Sets variables and objects.
                     Initialize();
                     // Load files - images, sounds, ...
                     LoadContent();
 
                     // When all things that are called above finished, we change game status to main menu.
-                    gameState = GameState.MAIN_MENU;
+                    estadoJuego = ESTADO_DEL_JUEGO.MENU_PRINCIPAL;
                 break;
-                case VISUALIZING:
+                case VISUALIZANDO:
                     // On Ubuntu OS (when I tested on my old computer) this.getWidth() method doesn't return the correct value immediately (eg. for frame that should be 800px width, returns 0 than 790 and at last 798px). 
                     // So we wait one second for the window/frame to be set to its correct size. Just in case we
                     // also insert 'this.getWidth() > 1' condition in case when the window/frame size wasn't set in time,
@@ -176,7 +192,7 @@ public class FlujoDelJuego extends Panel {
                         frameHeight = this.getHeight();
 
                         // When we get size of frame we change status.
-                        gameState = GameState.STARTING;
+                        estadoJuego = ESTADO_DEL_JUEGO.INICIANDO;
                     }
                     else
                     {
@@ -208,24 +224,24 @@ public class FlujoDelJuego extends Panel {
     @Override
     public void Draw(Graphics2D g2d)
     {
-        switch (gameState)
+        switch (estadoJuego)
         {
-            case PLAYING:
+            case JUGANDO:
                 game.Draw(g2d, mousePosition());
             break;
-            case GAMEOVER:
+            case FIN_DEL_JUEGO:
                 game.DrawGameOver(g2d, mousePosition(), gameTime);
             break;
-            case MAIN_MENU:
+            case MENU_PRINCIPAL:
                 //g2d.drawImage(moonLanderMenuImg, 0, 0, frameWidth, frameHeight, null);
                 g2d.setColor(Color.blue);
                 g2d.drawString("Use w a d keys to controle the rocket.", frameWidth / 2 - 117, frameHeight / 2);
                 g2d.drawString("Press any key to start the game.", frameWidth / 2 - 100, frameHeight / 2 + 30);
             break;
-            case OPTIONS:
+            case OPCIONES:
                 //...
             break;
-            case GAME_CONTENT_LOADING:
+            case CARGANDO_CONTENIDO_DEL_JUEGO:
                 g2d.setColor(Color.white);
                 g2d.drawString("GAME is LOADING", frameWidth / 2 - 50, frameHeight / 2);
             break;
@@ -256,7 +272,7 @@ public class FlujoDelJuego extends Panel {
         game.RestartGame();
         
         // We change game status so that the game can start.
-        gameState = GameState.PLAYING;
+        estadoJuego = ESTADO_DEL_JUEGO.JUGANDO;
     }
     
     /**
@@ -290,12 +306,12 @@ public class FlujoDelJuego extends Panel {
     @Override
     public void keyReleasedFramework(KeyEvent e)
     {
-        switch (gameState)
+        switch (estadoJuego)
         {
-            case MAIN_MENU:
+            case MENU_PRINCIPAL:
                 newGame();
             break;
-            case GAMEOVER:
+            case FIN_DEL_JUEGO:
                 if(e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_ENTER)
                     restartGame();
             break;

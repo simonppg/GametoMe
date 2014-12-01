@@ -14,7 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package gametome;
+package gametome.personajes;
+
+import gametome.FlujoDelJuego;
+import gametome.Panel;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -30,7 +33,7 @@ import javax.imageio.ImageIO;
  *
  * @author simonppg
  */
-class Heroe {
+public class Heroe {
     
     /**
      * coordenada X del heroe.
@@ -47,11 +50,11 @@ class Heroe {
     /**
      * Velocidad en Y.
      */
-    public int velocidadY;
+    private int velocidadY;
     /**
      * Velocidad con la que acelera el salto.
      */
-    public int velocidadAceleracionY;
+    private int velocidadAceleracionY;
     /**
      * Velocidad con la que se detiene el salto.
      */
@@ -59,7 +62,7 @@ class Heroe {
     /**
      * Velocidad con la que acelera en x.
      */
-    public int velocidadAceleracionX;
+    private int velocidadAceleracionX;
     /**
      * Velocidad con la que se detiene en x.
      */
@@ -71,44 +74,44 @@ class Heroe {
     /**
      * Ancho del heroe.
      */
-    public int heroeImgAncho;
+    private int heroeImgAncho;
     /**
      * Alto del heroe.
      */
-    public int heroeImgAlto;
+    private int heroeImgAlto;
     /**
      * Determina si el heroe esta saltando
      */
-    public boolean saltando;
+    private boolean saltando;
 
     public Heroe() {
         Initialize();
         LoadContent();
         
         x = 400;
-        y = 500;
+        y = (int) (FlujoDelJuego.frameHeight * 0.88) - heroeImgAlto;
     }
 
     private void Initialize() {
         //TODO Inicializar variables.
         saltando = false;
-        velocidadAceleracionY = 1;
-        velocidadDetenerY = 2;
-        velocidadAceleracionX = 2;
-        velocidadDetenerX = 1;
+        velocidadAceleracionY = 5;
+        velocidadDetenerY = 10;
+        //Deacuerdo a la logica de desplazamiento estas variables deben ser iguales
+        velocidadAceleracionX = velocidadDetenerX = 10;
     }
 
     private void LoadContent() {
         //TODO Cargar imagenes
         try
         {
-            URL heroeImgUrl = this.getClass().getResource("/resources/images/ryu.png");
+            URL heroeImgUrl = this.getClass().getResource("/resources/images/iroman.png");
             heroeImg = ImageIO.read(heroeImgUrl);
             heroeImgAncho = heroeImg.getWidth();
             heroeImgAlto = heroeImg.getHeight();
         }
         catch (IOException ex) {
-            Logger.getLogger(PlayerRocket.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Heroe.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     int cont=0;
@@ -123,21 +126,19 @@ class Heroe {
         }
         
         if(saltando){
-            //TODO revisar el tiempo
-            if(cont < 15) {
+            //TODO duracion de la animacion de salto
+            if(cont < 7) {
                 velocidadY -= velocidadAceleracionY;
                 cont++;
             }
             else {
-                if(y + velocidadY +velocidadDetenerY > 500) {
-                    //velocidadY = y + heroeImgAlto - (int) (FlujoDelJuego.frameHeight * 0.88);
+                if(y + velocidadY +velocidadDetenerY > (int) (FlujoDelJuego.frameHeight * 0.88) - heroeImgAlto) {
                     velocidadY = 0;
-                    y = 500;
+                    y = (int) (FlujoDelJuego.frameHeight * 0.88) - heroeImgAlto;
                     saltando = false;
                 }
                 else {
                     velocidadY += velocidadDetenerY;
-                    //cont--;
                 }
             }
         }

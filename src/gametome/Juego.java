@@ -1,6 +1,23 @@
+/*
+ * Copyright (C) 2014 simonppg
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package gametome;
 
-import java.awt.Color;
+import gametome.personajes.Heroe;
+
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -42,7 +59,7 @@ public class Juego {
 
     public Juego()
     {
-        FlujoDelJuego.gameState = FlujoDelJuego.GameState.GAME_CONTENT_LOADING;
+        FlujoDelJuego.estadoJuego = FlujoDelJuego.ESTADO_DEL_JUEGO.CARGANDO_CONTENIDO_DEL_JUEGO;
         
         Thread threadForInitGame = new Thread() {
             @Override
@@ -52,7 +69,7 @@ public class Juego {
                 // Load game files (images, sounds, ...)
                 LoadContent();
                 
-                FlujoDelJuego.gameState = FlujoDelJuego.GameState.PLAYING;
+                FlujoDelJuego.estadoJuego = FlujoDelJuego.ESTADO_DEL_JUEGO.JUGANDO;
             }
         };
         threadForInitGame.start();
@@ -107,14 +124,6 @@ public class Juego {
         heroe.Update();
         
         //TODO fisica del juego
-        
-        //Gravedad
-        /*if(heroe.y + heroe.heroeImgAlto > 500)
-        {
-            //Esto es para darle tiempo a que empice el salto, sin esto el salto no inicia
-            if(heroe.cont==7)
-                heroe.saltando = false;
-        }*/
         
         //TODO verifical si debe cambiar el estado del juego (pause, fin, gana, nueva escena, etc..)
         
