@@ -83,12 +83,12 @@ public class Heroe {
     /**
      * Saltando. Determina si el heroe esta saltando
      */
-    private boolean saltando;
+    //private boolean saltando;
     /**
      * Lista de estados. acciones.
      */
     public static enum ESTADO_DEL_HEROE {
-        QUIETO, INCADO, ESCALANDO, COLGADO, CORRIENDO,
+        QUIETO, INCADO, ESCALANDO, COLGADO, CORRIENDO, SALTANDO,
         ATAQUE_DE_ESPADA, ATAQUE_DE_ESPADA_INCADO, ATAQUE_DE_ESPADA_SALTANDO, 
         ATAQUE_ESPECIAL, ATAQUE_ESPECIAL_ESCALANDO, ATAQUE_ESPECIAL_SALTANDO
     }
@@ -112,7 +112,8 @@ public class Heroe {
     private void Initialize() {
         //TODO Inicializar variables.
         img = new ArrayList<Imagen>();
-        saltando = false;
+        estadoHeroe = ESTADO_DEL_HEROE.QUIETO;
+        //saltando = false;
         velocidadAceleracionY = 5;
         velocidadDetenerY = 10;
         //Deacuerdo a la logica de desplazamiento estas variables deben ser iguales
@@ -149,10 +150,11 @@ public class Heroe {
         {
             //TODO cambiar cont por alguna medida de tiempo
             if(cont==0)
-                saltando = true;
+                estadoHeroe = ESTADO_DEL_HEROE.SALTANDO;
+                //saltando = true;
         }
         
-        if(saltando){
+        if(estadoHeroe == ESTADO_DEL_HEROE.SALTANDO){
             //TODO duracion de la animacion de salto
             if(cont < 7) {
                 velocidadY -= velocidadAceleracionY;
@@ -162,7 +164,8 @@ public class Heroe {
                 if(y + velocidadY +velocidadDetenerY > (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto()) {
                     velocidadY = 0;
                     y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
-                    saltando = false;
+                    estadoHeroe = ESTADO_DEL_HEROE.QUIETO;
+                    //saltando = false;
                 }
                 else {
                     velocidadY += velocidadDetenerY;
@@ -192,12 +195,34 @@ public class Heroe {
         y += velocidadY;
     }
     
+    int s = 0;
     public void Draw(Graphics2D g2d)
     {
         //TODO Dibujar al personaje
-        g2d.drawImage(img.get(28).getImagen(), x, y, null);
+        if(estadoHeroe == ESTADO_DEL_HEROE.SALTANDO){
+            switch(s){
+                case 0:
+                    g2d.drawImage(img.get(10).getImagen(), x, y, null);
+                    s++;
+                    break;
+                case 1:
+                    g2d.drawImage(img.get(11).getImagen(), x, y, null);
+                    s++;
+                    break;
+                case 2:
+                    g2d.drawImage(img.get(12).getImagen(), x, y, null);
+                    s++;
+                    break;
+                case 3:
+                    g2d.drawImage(img.get(13).getImagen(), x, y, null);
+                    s=0;
+                    break;
+            }            
+        }
+        else
+            g2d.drawImage(img.get(28).getImagen(), x, y, null);
         g2d.setColor(Color.white);
         g2d.drawString("Heroe coordinates: " + x + " : " + y, 5, 15);
-        g2d.drawString("Heroe cont: " + cont+" salto: "+ saltando, 5, 30);
+        g2d.drawString("Heroe cont: " + cont+" salto: "+ estadoHeroe, 5, 30);
     }
 }
