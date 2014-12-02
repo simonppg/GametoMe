@@ -3,7 +3,7 @@ GametoMe
 
 Primer Juego en java open source de codigomex
 
-Este sera la primera version del juego, por ahora vamos a documentar el proyecto.
+Este sera la primera version del juego de plataforma.
 
 
 TODO
@@ -12,7 +12,7 @@ TODO
 
 Herramientas de desarrollo:
   IDE:            netbeans
-  Motor Grafico:  jmonkeyengine
+  Motor Grafico:  canvas o jmonkeyengine
   Documentación:  ...
 
 Herramientas de Diseño:

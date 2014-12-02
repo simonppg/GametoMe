@@ -25,12 +25,13 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 
 /**
- *
+ * Heroe controla los movimientos y el dibujado del personaje.
  * @author simonppg
  */
 public class Heroe {
@@ -74,26 +75,43 @@ public class Heroe {
     /**
      * Ancho del heroe.
      */
-    private int heroeImgAncho;
+    //private int heroeImgAncho;
     /**
      * Alto del heroe.
      */
-    private int heroeImgAlto;
+    //private int heroeImgAlto;
     /**
-     * Determina si el heroe esta saltando
+     * Saltando. Determina si el heroe esta saltando
      */
     private boolean saltando;
+    /**
+     * Lista de estados. acciones.
+     */
+    public static enum ESTADO_DEL_HEROE {
+        QUIETO, INCADO, ESCALANDO, COLGADO, CORRIENDO,
+        ATAQUE_DE_ESPADA, ATAQUE_DE_ESPADA_INCADO, ATAQUE_DE_ESPADA_SALTANDO, 
+        ATAQUE_ESPECIAL, ATAQUE_ESPECIAL_ESCALANDO, ATAQUE_ESPECIAL_SALTANDO
+    }
+    /**
+     * Estado del Heroe. actual.
+     */
+    public ESTADO_DEL_HEROE estadoHeroe;
+    /**
+     * Lista de imagenes. acciones.
+     */
+    private ArrayList<Imagen> img;
 
     public Heroe() {
         Initialize();
         LoadContent();
         
         x = 400;
-        y = (int) (FlujoDelJuego.frameHeight * 0.88) - heroeImgAlto;
+        y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
     }
 
     private void Initialize() {
         //TODO Inicializar variables.
+        img = new ArrayList<Imagen>();
         saltando = false;
         velocidadAceleracionY = 5;
         velocidadDetenerY = 10;
@@ -105,10 +123,19 @@ public class Heroe {
         //TODO Cargar imagenes
         try
         {
-            URL heroeImgUrl = this.getClass().getResource("/resources/images/iroman.png");
+            /*URL heroeImgUrl = this.getClass().getResource("/resources/images/heroe/ryu1.png");
             heroeImg = ImageIO.read(heroeImgUrl);
             heroeImgAncho = heroeImg.getWidth();
-            heroeImgAlto = heroeImg.getHeight();
+            heroeImgAlto = heroeImg.getHeight();*/
+            for (int i = 1; i <= 29; i++) {
+                URL heroeImgUrl = this.getClass().getResource("/resources/images/heroe/ryu"+i+".png");
+                Imagen localImg = new Imagen();
+                localImg.setImagen(ImageIO.read(heroeImgUrl));
+                img.add(localImg);
+                //heroeImgAncho = img.get(0).getImgAncho();
+                //heroeImgAlto = img.get(0).getImgAlto();
+                
+            }
         }
         catch (IOException ex) {
             Logger.getLogger(Heroe.class.getName()).log(Level.SEVERE, null, ex);
@@ -132,9 +159,9 @@ public class Heroe {
                 cont++;
             }
             else {
-                if(y + velocidadY +velocidadDetenerY > (int) (FlujoDelJuego.frameHeight * 0.88) - heroeImgAlto) {
+                if(y + velocidadY +velocidadDetenerY > (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto()) {
                     velocidadY = 0;
-                    y = (int) (FlujoDelJuego.frameHeight * 0.88) - heroeImgAlto;
+                    y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
                     saltando = false;
                 }
                 else {
@@ -168,7 +195,7 @@ public class Heroe {
     public void Draw(Graphics2D g2d)
     {
         //TODO Dibujar al personaje
-        g2d.drawImage(heroeImg, x, y, null);
+        g2d.drawImage(img.get(28).getImagen(), x, y, null);
         g2d.setColor(Color.white);
         g2d.drawString("Heroe coordinates: " + x + " : " + y, 5, 15);
         g2d.drawString("Heroe cont: " + cont+" salto: "+ saltando, 5, 30);

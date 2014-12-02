@@ -25,12 +25,12 @@ import javax.swing.SwingUtilities;
  * @author www.gametutorial.net
  */
 
-public class Window extends JFrame{
+public class Ventana extends JFrame{
         
-    private Window()
+    private Ventana()
     {
         // Sets the title for this frame.
-        this.setTitle("Moon Lander");
+        this.setTitle("GametoMe");
         
         // Sets size of the frame.
         if(false) // Full screen mode
@@ -64,7 +64,7 @@ public class Window extends JFrame{
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new Window();
+                new Ventana();
             }
         });
     }
