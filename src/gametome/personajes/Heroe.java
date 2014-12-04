@@ -35,6 +35,7 @@ import javax.imageio.ImageIO;
  * @author simonppg
  */
 public class Heroe {
+    //TODO faltan los topes de velocidad.
     
     /**
      * coordenada X del heroe.
@@ -117,7 +118,7 @@ public class Heroe {
         velocidadAceleracionY = 5;
         velocidadDetenerY = 10;
         //Deacuerdo a la logica de desplazamiento estas variables deben ser iguales
-        velocidadAceleracionX = velocidadDetenerX = 10;
+        velocidadAceleracionX = velocidadDetenerX = 1;
     }
 
     private void LoadContent() {
@@ -180,22 +181,34 @@ public class Heroe {
         
         // Calculating speed for moving or stopping to the left.
         if(Panel.keyboardKeyState(KeyEvent.VK_A))
+        {
             velocidadX -= velocidadAceleracionX;
-        else if(velocidadX < 0)
+            estadoHeroe = ESTADO_DEL_HEROE.CORRIENDO;
+        }
+        else if(velocidadX < 0){
             velocidadX += velocidadDetenerX;
+            estadoHeroe = ESTADO_DEL_HEROE.CORRIENDO;
+        }
         
         // Calculating speed for moving or stopping to the right.
-        if(Panel.keyboardKeyState(KeyEvent.VK_D))
+        if(Panel.keyboardKeyState(KeyEvent.VK_D)){
             velocidadX += velocidadAceleracionX;
-        else if(velocidadX > 0)
+            estadoHeroe = ESTADO_DEL_HEROE.CORRIENDO;
+        }
+        else if(velocidadX > 0){
             velocidadX -= velocidadDetenerX;
+            estadoHeroe = ESTADO_DEL_HEROE.CORRIENDO;
+        }
         
         // Moves the rocket.
         x += velocidadX;
         y += velocidadY;
+        if(velocidadX == 0 && velocidadY == 0)
+            estadoHeroe = ESTADO_DEL_HEROE.QUIETO;
     }
     
     int s = 0;
+    int corre =0;
     public void Draw(Graphics2D g2d)
     {
         //TODO Dibujar al personaje
@@ -217,10 +230,26 @@ public class Heroe {
                     g2d.drawImage(img.get(13).getImagen(), x, y, null);
                     s=0;
                     break;
+            }       
+        }
+        else if(estadoHeroe == ESTADO_DEL_HEROE.CORRIENDO){
+            switch(corre){
+                case 0:
+                    g2d.drawImage(img.get(26).getImagen(), x, y, null);
+                    corre++;
+                    break;
+                case 1:
+                    g2d.drawImage(img.get(27).getImagen(), x, y, null);
+                    corre++;
+                    break;
+                case 2:
+                    g2d.drawImage(img.get(28).getImagen(), x, y, null);
+                    corre=0;
+                    break;
             }            
         }
         else
-            g2d.drawImage(img.get(28).getImagen(), x, y, null);
+            g2d.drawImage(img.get(0).getImagen(), x, y, null);
         g2d.setColor(Color.white);
         g2d.drawString("Heroe coordinates: " + x + " : " + y, 5, 15);
         g2d.drawString("Heroe cont: " + cont+" salto: "+ estadoHeroe, 5, 30);
