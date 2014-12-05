@@ -25,67 +25,40 @@ public class EstadoHeroe {
      * Lista de estados. acciones.
      */    
     public static final int QUIETO = 0x0;
-    public static final int INCADO = 0x1;
-    public static final int ESCALANDO = 0x2;
-    public static final int COLGADO = 0x4;
-    public static final int CORRIENDO = 0x8;
-    public static final int SALTANDO = 0x10;
-    public static final int ATAQUE_DE_ESPADA = 0x20;
-    public static final int ATAQUE_DE_ESPADA_INCADO = 0x40;
-    public static final int ATAQUE_DE_ESPADA_SALTANDO = 0x80;
-    public static final int ATAQUE_ESPECIAL = 0x100;
-    public static final int ATAQUE_ESPECIAL_ESCALANDO = 0x200;
-    public static final int ATAQUE_ESPECIAL_SALTANDO = 0x400;
-    public static final int IZQUIERDA = 0x800;
-    public static final int DERECHA = 0x1000;
+    public static final int INCADO = 0x1;//TODO implementar
+    public static final int ESCALANDO = 0x2;//TODO implementar
+    public static final int COLGADO = 0x4;//TODO implementar
+    public static final int CORRIENDO_IZQUIERDA = 0x8;
+    public static final int CORRIENDO_DERECHA = 0x10;
+    public static final int SALTANDO = 0x20;
+    public static final int ATAQUE_DE_ESPADA = 0x40;//TODO implementar
+    public static final int ATAQUE_DE_ESPADA_INCADO = 0x80;//TODO implementar
+    public static final int ATAQUE_DE_ESPADA_SALTANDO = 0x100;//TODO implementar
+    public static final int ATAQUE_ESPECIAL = 0x200;//TODO implementar
+    public static final int ATAQUE_ESPECIAL_ESCALANDO = 0x400;//TODO implementar
+    public static final int ATAQUE_ESPECIAL_SALTANDO = 0x800;//TODO implementar
+
     /**
      * Estado del Heroe. variable de 32 bits (4 Bytes) para almacenar 32 estados al mismo tiempo
      */
     public int estadoHeroe;
-    boolean isIzquierda;
-
-    /*boolean isSaltando() {
-        if((estadoHeroe & SALTANDO) == SALTANDO)
-            return true;
-        else
-            return false;
-    }
-
+    
     boolean isCorriendo() {
-        if((estadoHeroe & CORRIENDO) == CORRIENDO)
-            return true;
-        else
-            return false;
+        return (estadoHeroe & CORRIENDO_IZQUIERDA) == CORRIENDO_IZQUIERDA
+                ||
+                (estadoHeroe & CORRIENDO_DERECHA) == CORRIENDO_DERECHA;
     }
-    
-    boolean isIzquierda() {
-        if((estadoHeroe & IZQUIERDA) == IZQUIERDA)
-            return true;
-        else
-            return false;
-    }
-    
-    boolean isDerecha() {
-        if((estadoHeroe & DERECHA) == DERECHA)
-            return true;
-        else
-            return false;
-    }*/
     
     boolean isSaltando() {
         return (estadoHeroe & SALTANDO) == SALTANDO;
     }
 
-    boolean isCorriendo() {
-        return (estadoHeroe & CORRIENDO) == CORRIENDO;
+    boolean isCorriendoIzquierda() {
+        return (estadoHeroe & CORRIENDO_IZQUIERDA) == CORRIENDO_IZQUIERDA;
     }
     
-    boolean isIzquierda() {
-        return (estadoHeroe & IZQUIERDA) == IZQUIERDA;
-    }
-    
-    boolean isDerecha() {
-        return (estadoHeroe & DERECHA) == DERECHA;
+    boolean isCorriendoDerecha() {
+        return (estadoHeroe & CORRIENDO_DERECHA) == CORRIENDO_DERECHA;
     }
 
     //Activa el bit correspondiente al estado que llega, Quieto pone todos los estados en 0
@@ -96,7 +69,7 @@ public class EstadoHeroe {
         {
              this.estadoHeroe = 0;
         }
-        else if(estadoHeroe == CORRIENDO && this.estadoHeroe == SALTANDO){
+        else if((estadoHeroe== CORRIENDO_IZQUIERDA || estadoHeroe == CORRIENDO_DERECHA) && this.estadoHeroe == SALTANDO){
             this.estadoHeroe |= estadoHeroe | SALTANDO;
         }
         else

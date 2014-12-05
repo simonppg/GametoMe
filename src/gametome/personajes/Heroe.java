@@ -155,21 +155,21 @@ public class Heroe {
         if(Panel.keyboardKeyState(KeyEvent.VK_A))
         {
             velocidadX -= velocidadAceleracionX;
-            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO | EstadoHeroe.IZQUIERDA);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO_IZQUIERDA);
         }
         else if(velocidadX < 0){
             velocidadX += velocidadDetenerX;
-            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO | EstadoHeroe.IZQUIERDA);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO_IZQUIERDA);
         }
         
         // Calculating speed for moving or stopping to the right.
         if(Panel.keyboardKeyState(KeyEvent.VK_D)){
             velocidadX += velocidadAceleracionX;
-            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO | EstadoHeroe.DERECHA);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO_DERECHA);
         }
         else if(velocidadX > 0){
             velocidadX -= velocidadDetenerX;
-            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO | EstadoHeroe.DERECHA);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO_DERECHA);
         }
         
         // Mueve al heroe
@@ -205,7 +205,7 @@ public class Heroe {
                     break;
             }       
         }
-        else if(estadoHeroe.isCorriendo() && estadoHeroe.isDerecha()){
+        else if(estadoHeroe.isCorriendoDerecha()){
             switch(corre){
                 case 0:
                     g2d.drawImage(img.get(26).getImagen(), x, y, null);
@@ -221,7 +221,7 @@ public class Heroe {
                     break;
             }
         }
-        else if(estadoHeroe.isCorriendo() && estadoHeroe.isIzquierda()){
+        else if(estadoHeroe.isCorriendoIzquierda()){
             g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
             switch(corre){
                 case 0:
