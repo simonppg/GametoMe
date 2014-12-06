@@ -24,60 +24,77 @@ public class EstadoHeroe {
     /**
      * Lista de estados. acciones.
      */    
-    public static final int QUIETO = 0x0;
-    public static final int INCADO = 0x1;//TODO implementar
-    public static final int ESCALANDO = 0x2;//TODO implementar
-    public static final int COLGADO = 0x4;//TODO implementar
-    public static final int CORRIENDO_IZQUIERDA = 0x8;
-    public static final int CORRIENDO_DERECHA = 0x10;
-    public static final int SALTANDO = 0x20;
-    public static final int ATAQUE_DE_ESPADA = 0x40;//TODO implementar
-    public static final int ATAQUE_DE_ESPADA_INCADO = 0x80;//TODO implementar
-    public static final int ATAQUE_DE_ESPADA_SALTANDO = 0x100;//TODO implementar
-    public static final int ATAQUE_ESPECIAL = 0x200;//TODO implementar
-    public static final int ATAQUE_ESPECIAL_ESCALANDO = 0x400;//TODO implementar
-    public static final int ATAQUE_ESPECIAL_SALTANDO = 0x800;//TODO implementar
+    public static final int DE_PIE = 0x1;
+    public static final int INCADO = 0x2;//TODO implementar
+    public static final int ESCALANDO = 0x4;//TODO implementar
+    public static final int COLGADO = 0x8;//TODO implementar
+    public static final int CORRIENDO = 0x10;
+    public static final int IZQUIERDA = 0x20;
+    public static final int DERECHA = 0x40;
+    public static final int SALTANDO = 0x80;
+    public static final int ATAQUE_DE_ESPADA = 0x100;//TODO implementar
+    public static final int ATAQUE_DE_ESPADA_INCADO = 0x200;//TODO implementar
+    public static final int ATAQUE_DE_ESPADA_SALTANDO = 0x400;//TODO implementar
+    public static final int ATAQUE_ESPECIAL = 0x800;//TODO implementar
+    public static final int ATAQUE_ESPECIAL_ESCALANDO = 0x1000;//TODO implementar
+    public static final int ATAQUE_ESPECIAL_SALTANDO = 0x2000;//TODO implementar
+    //Limite 0x80000000
 
     /**
      * Estado del Heroe. variable de 32 bits (4 Bytes) para almacenar 32 estados al mismo tiempo
      */
     public int estadoHeroe;
     
+    boolean isDe_Pie() {
+        return (estadoHeroe & DE_PIE) == DE_PIE;
+    }
+    
     boolean isCorriendo() {
-        return (estadoHeroe & CORRIENDO_IZQUIERDA) == CORRIENDO_IZQUIERDA
-                ||
-                (estadoHeroe & CORRIENDO_DERECHA) == CORRIENDO_DERECHA;
+        return (estadoHeroe & CORRIENDO) == CORRIENDO;
     }
     
     boolean isSaltando() {
         return (estadoHeroe & SALTANDO) == SALTANDO;
     }
 
-    boolean isCorriendoIzquierda() {
-        return (estadoHeroe & CORRIENDO_IZQUIERDA) == CORRIENDO_IZQUIERDA;
+    boolean isIzquierda() {
+        return (estadoHeroe & IZQUIERDA) == IZQUIERDA;
     }
     
-    boolean isCorriendoDerecha() {
-        return (estadoHeroe & CORRIENDO_DERECHA) == CORRIENDO_DERECHA;
+    boolean isDerecha() {
+        return (estadoHeroe & DERECHA) == DERECHA;
     }
 
     //Activa el bit correspondiente al estado que llega, Quieto pone todos los estados en 0
     public void setEstadoHeroe(int estadoHeroe) {
         //Al utilizar esta funcion revisar si el estado nuevo tiene conflicto con otro estado viejo, no olvidar quitar el viejo
         //por ejemplo si esta INCADO y ponemos ESCALANDO, debemos quitar el estado INCADO
-        if(estadoHeroe == QUIETO)
+        if((estadoHeroe & DE_PIE) == DE_PIE)//DE_PIE no debe borrar IZQUIERDA y DERECHA
         {
-             this.estadoHeroe = 0;
+            this.estadoHeroe &= IZQUIERDA + DERECHA;
+            this.estadoHeroe |= DE_PIE;
         }
-        else if((estadoHeroe== CORRIENDO_IZQUIERDA || estadoHeroe == CORRIENDO_DERECHA) && this.estadoHeroe == SALTANDO){
-            this.estadoHeroe |= estadoHeroe | SALTANDO;
+        else if((estadoHeroe & SALTANDO) == SALTANDO)//SALTANDO no debe borrar IZQUIERDA y DERECHA
+        {
+            this.estadoHeroe &= IZQUIERDA + DERECHA;
+            this.estadoHeroe |= SALTANDO;
         }
-        else
+        else if((estadoHeroe & CORRIENDO) == CORRIENDO)//CORRIENDO no debe borrar IZQUIERDA y DERECHA ni SALTANDO
+        {
+            this.estadoHeroe &= IZQUIERDA + DERECHA + SALTANDO;
+            this.estadoHeroe |= CORRIENDO;
+        }
+        else if(estadoHeroe== IZQUIERDA || estadoHeroe == DERECHA){
+            this.estadoHeroe &= DE_PIE + INCADO + ESCALANDO + COLGADO + CORRIENDO + SALTANDO;
             this.estadoHeroe |= estadoHeroe;
+        }
+        else{
+            this.estadoHeroe |= estadoHeroe;
+            System.out.println("Esto no debe ocurrir: " + estadoHeroe);
+        }
     }
     
     public int getEstadoHeroe() {
         return estadoHeroe;
-    }
-    
+    }    
 }

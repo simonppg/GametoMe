@@ -95,6 +95,8 @@ public class Heroe {
         //TODO Inicializar variables.
         img = new ArrayList<Imagen>();
         estadoHeroe = new EstadoHeroe();
+        estadoHeroe.setEstadoHeroe(EstadoHeroe.DE_PIE);
+        estadoHeroe.setEstadoHeroe(EstadoHeroe.DERECHA);
         velocidadAceleracionY = 5;
         velocidadDetenerY = 10;
         //Deacuerdo a la logica de desplazamiento estas variables deben ser iguales
@@ -138,7 +140,7 @@ public class Heroe {
                 if(y + velocidadY +velocidadDetenerY > (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto()) {
                     velocidadY = 0;
                     y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
-                    estadoHeroe.setEstadoHeroe(EstadoHeroe.QUIETO);
+                    estadoHeroe.setEstadoHeroe(EstadoHeroe.DE_PIE);
                 }
                 else {
                     velocidadY += velocidadDetenerY;
@@ -155,28 +157,32 @@ public class Heroe {
         if(Panel.keyboardKeyState(KeyEvent.VK_A))
         {
             velocidadX -= velocidadAceleracionX;
-            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO_IZQUIERDA);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.IZQUIERDA);
         }
         else if(velocidadX < 0){
             velocidadX += velocidadDetenerX;
-            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO_IZQUIERDA);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.IZQUIERDA);
         }
         
         // Calculating speed for moving or stopping to the right.
         if(Panel.keyboardKeyState(KeyEvent.VK_D)){
             velocidadX += velocidadAceleracionX;
-            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO_DERECHA);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.DERECHA);
         }
         else if(velocidadX > 0){
             velocidadX -= velocidadDetenerX;
-            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO_DERECHA);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.DERECHA);
         }
         
         // Mueve al heroe
         x += velocidadX;
         y += velocidadY;
         if(velocidadX == 0 && velocidadY == 0){
-            estadoHeroe.setEstadoHeroe(EstadoHeroe.QUIETO);
+            estadoHeroe.setEstadoHeroe(EstadoHeroe.DE_PIE);
         }
     }
     
@@ -205,7 +211,7 @@ public class Heroe {
                     break;
             }       
         }
-        else if(estadoHeroe.isCorriendoDerecha()){
+        else if(estadoHeroe.isCorriendo() && estadoHeroe.isDerecha()){
             switch(corre){
                 case 0:
                     g2d.drawImage(img.get(26).getImagen(), x, y, null);
@@ -221,7 +227,7 @@ public class Heroe {
                     break;
             }
         }
-        else if(estadoHeroe.isCorriendoIzquierda()){
+        else if( estadoHeroe.isCorriendo() && estadoHeroe.isIzquierda()){
             g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
             switch(corre){
                 case 0:
@@ -238,8 +244,12 @@ public class Heroe {
                     break;
             }
         }
-        else{
+        if(estadoHeroe.isDe_Pie() && estadoHeroe.isDerecha()){
             g2d.drawImage(img.get(0).getImagen(), x, y, null);
+        }
+        if(estadoHeroe.isDe_Pie() && estadoHeroe.isIzquierda()){
+            g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
+            g2d.drawImage(img.get(0).getImagen(), -x-img.get(0).getImgAncho(), y, null);
         }
             
         g2d.setColor(Color.white);
