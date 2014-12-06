@@ -64,6 +64,10 @@ public class EstadoHeroe {
     boolean isDerecha() {
         return (estadoHeroe & DERECHA) == DERECHA;
     }
+    
+    boolean isAtaqueDeEspada() {
+        return (estadoHeroe & ATAQUE_DE_ESPADA) == ATAQUE_DE_ESPADA;
+    }
 
     //Activa el bit correspondiente al estado que llega, Quieto pone todos los estados en 0
     public void setEstadoHeroe(int estadoHeroe) {
@@ -88,6 +92,13 @@ public class EstadoHeroe {
             this.estadoHeroe &= DE_PIE + INCADO + ESCALANDO + COLGADO + CORRIENDO + SALTANDO;
             this.estadoHeroe |= estadoHeroe;
         }
+        else if((estadoHeroe & ATAQUE_DE_ESPADA) == ATAQUE_DE_ESPADA)//ATAQUE_DE_ESPADA no debe borrar IZQUIERDA y DERECHA ni CORRIENDO
+        {
+            System.out.println("Esr: " + estadoHeroe);
+            this.estadoHeroe &= IZQUIERDA + DERECHA + DE_PIE + INCADO + ESCALANDO + COLGADO + CORRIENDO + SALTANDO;
+            this.estadoHeroe |= ATAQUE_DE_ESPADA;
+            System.out.println("Esto r: " + estadoHeroe);
+        }
         else{
             this.estadoHeroe |= estadoHeroe;
             System.out.println("Esto no debe ocurrir: " + estadoHeroe);
@@ -96,5 +107,5 @@ public class EstadoHeroe {
     
     public int getEstadoHeroe() {
         return estadoHeroe;
-    }    
+    }
 }
