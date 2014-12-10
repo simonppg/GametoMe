@@ -31,11 +31,12 @@ public class Alarma {
     TimerTask task;
     Callable func;
 
-    public Alarma(int seconds, Callable func) {
+    //1000 = 1 seg
+    public Alarma(int tiempo, Callable func) {
         task = new RemindTask(func);
         this.func = func;
         timer = new Timer();
-        timer.schedule(task, seconds*1000);
+        timer.schedule(task, tiempo);
     }
 
     class RemindTask extends TimerTask {

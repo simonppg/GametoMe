@@ -85,6 +85,8 @@ public class Heroe {
      * Lista de imagenes. acciones.
      */
     private ArrayList<Imagen> img;
+    private int tiempoAnimacion = 300;
+    private long startTime;
     /**
      * alarma. mide el tiempo.
      */
@@ -227,9 +229,10 @@ public class Heroe {
                     estadoHeroe.isCorriendo()||
                     estadoHeroe.isSaltando()))
             {
+                startTime = System.currentTimeMillis();
                 estadoHeroe.setAtaqueDeEspada(true);
                 //System.out.println("Inicio animacion");
-                Alarma a = new Alarma(1, new Callable() {
+                Alarma a = new Alarma(tiempoAnimacion, new Callable() {
                     @Override
                     public Object call() throws Exception {
                         //System.out.println("Fin animacion");
@@ -269,20 +272,14 @@ public class Heroe {
         //Ataque de espada
         if(estadoHeroe.isAtaqueDeEspada()){
             if(estadoHeroe.isDerecha()){
-                switch(ataque){
-                    case 0:
-                        g2d.drawImage(img.get(1).getImagen(), x, y, null);
-                        ataque++;
-                        break;
-                    case 1:
-                        g2d.drawImage(img.get(2).getImagen(), x, y, null);
-                        ataque++;
-                        break;
-                    case 2:
-                        g2d.drawImage(img.get(3).getImagen(), x, y, null);
-                        ataque=0;
-                        break;
-                }
+                long currenTime = System.currentTimeMillis() - startTime;
+                
+                if((currenTime * 100) / tiempoAnimacion <= 33.33)
+                    g2d.drawImage(img.get(1).getImagen(), x, y, null);
+                else if((currenTime * 100) / tiempoAnimacion <= 66.66)
+                    g2d.drawImage(img.get(2).getImagen(), x, y, null);
+                else if((currenTime * 100) / tiempoAnimacion <= 100)
+                    g2d.drawImage(img.get(3).getImagen(), x, y, null);
             }
             else if(estadoHeroe.isIzquierda()){
                 g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
