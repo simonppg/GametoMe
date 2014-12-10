@@ -28,22 +28,26 @@ public class EstadoHeroe {
     public static final int INCADO = 0x2;//TODO implementar
     public static final int ESCALANDO = 0x4;//TODO implementar
     public static final int COLGADO = 0x8;//TODO implementar
+    
     public static final int CORRIENDO = 0x10;
     public static final int IZQUIERDA = 0x20;
     public static final int DERECHA = 0x40;
     public static final int SALTANDO = 0x80;
+    
     public static final int ATAQUE_DE_ESPADA = 0x100;//TODO implementar
     public static final int ATAQUE_DE_ESPADA_INCADO = 0x200;//TODO implementar
     public static final int ATAQUE_DE_ESPADA_SALTANDO = 0x400;//TODO implementar
     public static final int ATAQUE_ESPECIAL = 0x800;//TODO implementar
+    
     public static final int ATAQUE_ESPECIAL_ESCALANDO = 0x1000;//TODO implementar
     public static final int ATAQUE_ESPECIAL_SALTANDO = 0x2000;//TODO implementar
+    public static final int FRENANDO = 0x4000;//TODO implementar
     //Limite 0x80000000
 
     /**
      * Estado del Heroe. variable de 32 bits (4 Bytes) para almacenar 32 estados al mismo tiempo
      */
-    public int estadoHeroe;
+    public int estadoHeroe = 0;
     
     boolean isDe_Pie() {
         return (estadoHeroe & DE_PIE) == DE_PIE;
@@ -68,6 +72,15 @@ public class EstadoHeroe {
     boolean isAtaqueDeEspada() {
         return (estadoHeroe & ATAQUE_DE_ESPADA) == ATAQUE_DE_ESPADA;
     }
+    
+    boolean isFrenando() {
+        return (estadoHeroe & FRENANDO) == FRENANDO;
+    }
+    
+    boolean isAtaqueDeEspadaSaltando() {
+        return (estadoHeroe & ATAQUE_DE_ESPADA_SALTANDO) == ATAQUE_DE_ESPADA_SALTANDO;
+    }
+            
 
     //Activa el bit correspondiente al estado que llega, Quieto pone todos los estados en 0
     public void setEstadoHeroe(int estadoHeroe) {
@@ -75,29 +88,38 @@ public class EstadoHeroe {
         //por ejemplo si esta INCADO y ponemos ESCALANDO, debemos quitar el estado INCADO
         if((estadoHeroe & DE_PIE) == DE_PIE)//DE_PIE no debe borrar IZQUIERDA y DERECHA
         {
-            this.estadoHeroe &= IZQUIERDA + DERECHA;
+            System.out.println("DE_PIE: " + estadoHeroe);
+            this.estadoHeroe &= IZQUIERDA + DERECHA + ATAQUE_DE_ESPADA + ATAQUE_ESPECIAL;
             this.estadoHeroe |= DE_PIE;
         }
         else if((estadoHeroe & SALTANDO) == SALTANDO)//SALTANDO no debe borrar IZQUIERDA y DERECHA
         {
-            this.estadoHeroe &= IZQUIERDA + DERECHA;
+            System.out.println("SALTANDO: " + estadoHeroe);
+            this.estadoHeroe &= IZQUIERDA + DERECHA + ATAQUE_DE_ESPADA_SALTANDO;
             this.estadoHeroe |= SALTANDO;
         }
         else if((estadoHeroe & CORRIENDO) == CORRIENDO)//CORRIENDO no debe borrar IZQUIERDA y DERECHA ni SALTANDO
         {
-            this.estadoHeroe &= IZQUIERDA + DERECHA + SALTANDO;
+            System.out.println("CORRIENDO: " + estadoHeroe);
+            this.estadoHeroe &= IZQUIERDA + DERECHA + SALTANDO + ATAQUE_DE_ESPADA;
             this.estadoHeroe |= CORRIENDO;
         }
+        else if((estadoHeroe & FRENANDO) == FRENANDO)//FRENANDO no debe borrar IZQUIERDA y DERECHA ni SALTANDO
+        {
+            System.out.println("FRENANDO: " + estadoHeroe);
+            this.estadoHeroe &= IZQUIERDA + DERECHA + SALTANDO + ATAQUE_DE_ESPADA;
+            this.estadoHeroe |= FRENANDO;
+        }
         else if(estadoHeroe== IZQUIERDA || estadoHeroe == DERECHA){
-            this.estadoHeroe &= DE_PIE + INCADO + ESCALANDO + COLGADO + CORRIENDO + SALTANDO;
+            System.out.println("DIRECCION: " + estadoHeroe);
+            this.estadoHeroe &= DE_PIE + INCADO + ESCALANDO + COLGADO + CORRIENDO + SALTANDO + FRENANDO;
             this.estadoHeroe |= estadoHeroe;
         }
         else if((estadoHeroe & ATAQUE_DE_ESPADA) == ATAQUE_DE_ESPADA)//ATAQUE_DE_ESPADA no debe borrar IZQUIERDA y DERECHA ni CORRIENDO
         {
-            System.out.println("Esr: " + estadoHeroe);
+            System.out.println("ATAQUE_DE_ESPADA: " + estadoHeroe);
             this.estadoHeroe &= IZQUIERDA + DERECHA + DE_PIE + INCADO + ESCALANDO + COLGADO + CORRIENDO + SALTANDO;
             this.estadoHeroe |= ATAQUE_DE_ESPADA;
-            System.out.println("Esto r: " + estadoHeroe);
         }
         else{
             this.estadoHeroe |= estadoHeroe;
