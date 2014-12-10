@@ -101,8 +101,8 @@ public class Heroe {
         //TODO Inicializar variables.
         img = new ArrayList<Imagen>();
         estadoHeroe = new EstadoHeroe();
-        estadoHeroe.setEstadoHeroe(EstadoHeroe.DE_PIE);
-        estadoHeroe.setEstadoHeroe(EstadoHeroe.DERECHA);
+        estadoHeroe.setDePie(true);
+        estadoHeroe.setDerecha(true);
         velocidadAceleracionY = 5;
         velocidadDetenerY = 10;
         //Deacuerdo a la logica de desplazamiento estas variables deben ser iguales
@@ -130,12 +130,12 @@ public class Heroe {
         
         if(Panel.keyboardKeyState(KeyEvent.VK_NUMPAD2))
         {
-            if(estadoHeroe.isDe_Pie() ||
+            if(estadoHeroe.isDePie() ||
                     estadoHeroe.isCorriendo())
             {
                 //TODO cambiar cont por alguna medida de tiempo
                 if(cont==0){
-                    estadoHeroe.setEstadoHeroe(EstadoHeroe.SALTANDO);
+                    estadoHeroe.setSaltando(true);
                 }
             }
         }
@@ -150,7 +150,7 @@ public class Heroe {
                 if(y + velocidadY +velocidadDetenerY > (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto()) {
                     velocidadY = 0;
                     y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
-                    estadoHeroe.setEstadoHeroe(EstadoHeroe.DE_PIE);
+                    estadoHeroe.setDePie(true);
                 }
                 else {
                     velocidadY += velocidadDetenerY;
@@ -165,12 +165,12 @@ public class Heroe {
         
         //Calcula la velocidad de movimiento o frenado a la izquierda
         if(Panel.keyboardKeyState(KeyEvent.VK_A)){
-            if(estadoHeroe.isDe_Pie() ||
+            if(estadoHeroe.isDePie() ||
                     estadoHeroe.isCorriendo())
             {
                 velocidadX -= velocidadAceleracionX;
-                estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO);
-                estadoHeroe.setEstadoHeroe(EstadoHeroe.IZQUIERDA);
+                estadoHeroe.setCorriendo(true);
+                estadoHeroe.setIzquierda(true);
             }
         }
         else
@@ -180,20 +180,20 @@ public class Heroe {
                         estadoHeroe.isFrenando())
                 {
                     velocidadX += velocidadDetenerX;
-                    estadoHeroe.setEstadoHeroe(EstadoHeroe.FRENANDO);
-                    estadoHeroe.setEstadoHeroe(EstadoHeroe.IZQUIERDA);
+                    estadoHeroe.setFrenando(true);
+                    estadoHeroe.setIzquierda(true);
                 }
             }
         }
         
         //Calcula la velocidad de movimiento o frenado a la derecha
         if(Panel.keyboardKeyState(KeyEvent.VK_D)){
-            if(estadoHeroe.isDe_Pie() ||
+            if(estadoHeroe.isDePie() ||
                     estadoHeroe.isCorriendo())
             {
                 velocidadX += velocidadAceleracionX;
-                estadoHeroe.setEstadoHeroe(EstadoHeroe.CORRIENDO);
-                estadoHeroe.setEstadoHeroe(EstadoHeroe.DERECHA);
+                estadoHeroe.setCorriendo(true);
+                estadoHeroe.setDerecha(true);
             }
         }
         else
@@ -203,8 +203,8 @@ public class Heroe {
                         estadoHeroe.isFrenando())
                 {
                     velocidadX -= velocidadDetenerX;
-                    estadoHeroe.setEstadoHeroe(EstadoHeroe.FRENANDO);
-                    estadoHeroe.setEstadoHeroe(EstadoHeroe.DERECHA);
+                    estadoHeroe.setFrenando(true);
+                    estadoHeroe.setDerecha(true);
                 }
             }
         }
@@ -213,17 +213,17 @@ public class Heroe {
         if(Panel.keyboardKeyState(KeyEvent.VK_NUMPAD1))
         {
             if(!estadoHeroe.isAtaqueDeEspada() &&
-                    (estadoHeroe.isDe_Pie()||
+                    (estadoHeroe.isDePie()||
                     estadoHeroe.isCorriendo()||
                     estadoHeroe.isSaltando()))
             {
-                estadoHeroe.setEstadoHeroe(EstadoHeroe.ATAQUE_DE_ESPADA);
+                estadoHeroe.setAtaqueDeEspada(true);
                 //System.out.println("Inicio animacion");
                 Alarma a = new Alarma(1, new Callable() {
                     @Override
                     public Object call() throws Exception {
                         //System.out.println("Fin animacion");
-                        estadoHeroe.setEstadoHeroe(-EstadoHeroe.ATAQUE_DE_ESPADA);
+                        //estadoHeroe.setEstadoHeroe(-EstadoHeroe.ATAQUE_DE_ESPADA);
                         return null;
                     }
                 });
@@ -234,7 +234,15 @@ public class Heroe {
         x += velocidadX;
         y += velocidadY;
         if(velocidadX == 0 && velocidadY == 0){
-            estadoHeroe.setEstadoHeroe(EstadoHeroe.DE_PIE);
+            if(estadoHeroe.isDerecha()){
+                estadoHeroe.setDePie(true);
+                estadoHeroe.setDerecha(true);
+            }
+            if(estadoHeroe.isIzquierda())
+            {
+                estadoHeroe.setDePie(true);
+                estadoHeroe.setIzquierda(true);
+            }
         }
     }
     
@@ -318,6 +326,44 @@ public class Heroe {
             }
         }
         
+        
+        /*if((estadoHeroe.isDe_Pie() || estadoHeroe.isCorriendo()) && 
+            estadoHeroe.isDerecha() &&
+            estadoHeroe.isAtaqueDeEspada()){
+            switch(ataque){
+                case 0:
+                    g2d.drawImage(img.get(1).getImagen(), x, y, null);
+                    ataque++;
+                    break;
+                case 1:
+                    g2d.drawImage(img.get(2).getImagen(), x, y, null);
+                    ataque++;
+                    break;
+                case 2:
+                    g2d.drawImage(img.get(3).getImagen(), x, y, null);
+                    ataque=0;
+                    break;
+            }
+        }
+        else if((estadoHeroe.isDe_Pie() || estadoHeroe.isCorriendo()) &&
+            estadoHeroe.isIzquierda() &&
+            estadoHeroe.isAtaqueDeEspada()){
+            g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
+            switch(ataque){
+                case 0:
+                    g2d.drawImage(img.get(1).getImagen(), -x-img.get(26).getImgAncho(), y, null);
+                    ataque++;
+                    break;
+                case 1:
+                    g2d.drawImage(img.get(2).getImagen(), -x-img.get(27).getImgAncho(), y, null);
+                    ataque++;
+                    break;
+                case 2:
+                    g2d.drawImage(img.get(3).getImagen(), -x-img.get(28).getImgAncho(), y, null);
+                    ataque=0;
+                    break;
+            }
+        }*/
         else if(estadoHeroe.isSaltando() || (estadoHeroe.isSaltando() && estadoHeroe.isCorriendo())){
             switch(salto){
                 case 0:
@@ -373,18 +419,23 @@ public class Heroe {
                     break;
             }
         }
-        else if(estadoHeroe.isDe_Pie() && estadoHeroe.isDerecha()){
+        else if(estadoHeroe.isDePie()&& estadoHeroe.isDerecha()){
             g2d.drawImage(img.get(0).getImagen(), x, y, null);
         }
-        else if(estadoHeroe.isDe_Pie() && estadoHeroe.isIzquierda()){
+        else if(estadoHeroe.isDePie() && estadoHeroe.isIzquierda()){
             g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
             g2d.drawImage(img.get(0).getImagen(), -x-img.get(0).getImgAncho(), y, null);
         }
         
-        
         g2d.setTransform(AffineTransform.getScaleInstance(1, 1));
         g2d.setColor(Color.white);
         g2d.drawString("Heroe coordinates: " + x + " : " + y, 5, 15);        
-        g2d.drawString("Heroe estado: " + estadoHeroe.getEstadoHeroe(), 5, 45);
+        g2d.drawString("DePie: " + estadoHeroe.isDePie(), 5, 45);
+        g2d.drawString("Corr: " + estadoHeroe.isCorriendo(), 5, 60);
+        g2d.drawString("Fren: " + estadoHeroe.isFrenando(), 5, 75);
+        g2d.drawString("Izqu: " + estadoHeroe.isIzquierda(), 5, 100);
+        g2d.drawString("Dere: " + estadoHeroe.isDerecha(), 5, 115);
+        g2d.drawString("Salt: " + estadoHeroe.isSaltando(), 5, 130);
+        g2d.drawString("Espa: " + estadoHeroe.isAtaqueDeEspada(), 5, 145);
     }
 }
