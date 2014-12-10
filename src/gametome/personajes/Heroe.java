@@ -135,6 +135,7 @@ public class Heroe {
             {
                 //TODO cambiar cont por alguna medida de tiempo
                 if(cont==0){
+                    estadoHeroe.setDePie(false);
                     estadoHeroe.setSaltando(true);
                 }
             }
@@ -150,6 +151,7 @@ public class Heroe {
                 if(y + velocidadY +velocidadDetenerY > (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto()) {
                     velocidadY = 0;
                     y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
+                    estadoHeroe.setSaltando(false);
                     estadoHeroe.setDePie(true);
                 }
                 else {
@@ -170,6 +172,8 @@ public class Heroe {
             {
                 velocidadX -= velocidadAceleracionX;
                 estadoHeroe.setCorriendo(true);
+                estadoHeroe.setDerecha(false);
+                estadoHeroe.setFrenando(false);
                 estadoHeroe.setIzquierda(true);
             }
         }
@@ -180,6 +184,8 @@ public class Heroe {
                         estadoHeroe.isFrenando())
                 {
                     velocidadX += velocidadDetenerX;
+                    estadoHeroe.setCorriendo(false);
+                    estadoHeroe.setDerecha(false);
                     estadoHeroe.setFrenando(true);
                     estadoHeroe.setIzquierda(true);
                 }
@@ -193,6 +199,8 @@ public class Heroe {
             {
                 velocidadX += velocidadAceleracionX;
                 estadoHeroe.setCorriendo(true);
+                estadoHeroe.setIzquierda(false);
+                estadoHeroe.setFrenando(false);
                 estadoHeroe.setDerecha(true);
             }
         }
@@ -203,6 +211,8 @@ public class Heroe {
                         estadoHeroe.isFrenando())
                 {
                     velocidadX -= velocidadDetenerX;
+                    estadoHeroe.setCorriendo(false);
+                    estadoHeroe.setIzquierda(false);
                     estadoHeroe.setFrenando(true);
                     estadoHeroe.setDerecha(true);
                 }
@@ -223,7 +233,7 @@ public class Heroe {
                     @Override
                     public Object call() throws Exception {
                         //System.out.println("Fin animacion");
-                        //estadoHeroe.setEstadoHeroe(-EstadoHeroe.ATAQUE_DE_ESPADA);
+                        estadoHeroe.setAtaqueDeEspada(false);
                         return null;
                     }
                 });
@@ -235,11 +245,15 @@ public class Heroe {
         y += velocidadY;
         if(velocidadX == 0 && velocidadY == 0){
             if(estadoHeroe.isDerecha()){
+                estadoHeroe.setCorriendo(false);
+                estadoHeroe.setFrenando(false);
                 estadoHeroe.setDePie(true);
                 estadoHeroe.setDerecha(true);
             }
             if(estadoHeroe.isIzquierda())
             {
+                estadoHeroe.setCorriendo(false);
+                estadoHeroe.setFrenando(false);
                 estadoHeroe.setDePie(true);
                 estadoHeroe.setIzquierda(true);
             }
