@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!--Created with JFLAP 6.4.--><structure>
+	<type>fa</type>
+	<automaton>
+		<!--The list of states.-->
+		<state id="0" name="q0">
+			<x>438.0</x>
+			<y>448.0</y>
+			<label>dePie</label>
+			<initial/>
+		</state>
+		<state id="1" name="q1">
+			<x>535.0</x>
+			<y>448.0</y>
+			<label>dePieDerecha</label>
+		</state>
+		<state id="2" name="q2">
+			<x>546.0</x>
+			<y>274.0</y>
+			<label>saltandoDerecha</label>
+		</state>
+		<state id="3" name="q3">
+			<x>546.0</x>
+			<y>609.0</y>
+			<label>incadoDerecha</label>
+		</state>
+		<state id="4" name="q4">
+			<x>863.0</x>
+			<y>579.0</y>
+			<label>corriendoDerecha</label>
+		</state>
+		<state id="5" name="q5">
+			<x>911.0</x>
+			<y>258.0</y>
+			<label>ataqueEspadaDerecha</label>
+		</state>
+		<state id="6" name="q6">
+			<x>539.0</x>
+			<y>785.0</y>
+			<label>ataqueEspadaIncadoDerecha</label>
+		</state>
+		<state id="7" name="q7">
+			<x>928.0</x>
+			<y>134.0</y>
+			<label>ataqueEspadaSaltandoDerecha</label>
+		</state>
+		<state id="8" name="q8">
+			<x>763.0</x>
+			<y>427.0</y>
+			<label>frenandoDerecha</label>
+		</state>
+		<state id="9" name="q9">
+			<x>408.0</x>
+			<y>149.0</y>
+			<label>escalandoDerecha</label>
+		</state>
+		<state id="10" name="q10">
+			<x>298.0</x>
+			<y>269.0</y>
+			<label>colgadoDerecha</label>
+		</state>
+		<state id="11" name="q11">
+			<x>208.0</x>
+			<y>152.0</y>
+			<label>escalandoDerechaArriba</label>
+		</state>
+		<state id="12" name="q12">
+			<x>531.0</x>
+			<y>12.0</y>
+			<label>colgadoDerechaAbajo</label>
+		</state>
+		<state id="13" name="q13">
+			<x>730.0</x>
+			<y>620.0</y>
+			<label>ataqueEspecialDerecha</label>
+		</state>
+		<state id="14" name="q14">
+			<x>617.0</x>
+			<y>89.0</y>
+			<label>ataqueEspecialSaltandoDerecha</label>
+		</state>
+		<state id="15" name="q15">
+			<x>80.0</x>
+			<y>41.0</y>
+			<label>ataqueEspecialEscalandoDerecha</label>
+		</state>
+		<!--The list of transitions.-->
+		<transition>
+			<from>2</from>
+			<to>1</to>
+			<read>toca el suelo</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>4</to>
+			<read>termina animacion</read>
+		</transition>
+		<transition>
+			<from>8</from>
+			<to>1</to>
+			<read>velocidad 0</read>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>3</to>
+			<read>abajo</read>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>6</to>
+			<read>btn a</read>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>9</to>
+			<read>toca escaleras</read>
+		</transition>
+		<transition>
+			<from>4</from>
+			<to>8</to>
+			<read>soltar derecha</read>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>4</to>
+			<read>derecha</read>
+		</transition>
+		<transition>
+			<from>9</from>
+			<to>11</to>
+			<read>arriba</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>1</to>
+			<read>termina animacion</read>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>7</to>
+			<read>btn a</read>
+		</transition>
+		<transition>
+			<from>7</from>
+			<to>1</to>
+			<controlx>734</controlx>
+			<controly>266</controly>
+			<read>toca el suelo</read>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>10</to>
+			<read>toca pasamanos</read>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>9</to>
+			<controlx>318</controlx>
+			<controly>109</controly>
+			<read>soltar arriba</read>
+		</transition>
+		<transition>
+			<from>3</from>
+			<to>1</to>
+			<read>soltar abajo</read>
+		</transition>
+		<transition>
+			<from>8</from>
+			<to>5</to>
+			<read>btn a</read>
+		</transition>
+		<transition>
+			<from>15</from>
+			<to>11</to>
+			<read>termina animacion</read>
+		</transition>
+		<transition>
+			<from>9</from>
+			<to>2</to>
+			<read>btn b</read>
+		</transition>
+		<transition>
+			<from>7</from>
+			<to>2</to>
+			<read>termina animacion</read>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>5</to>
+			<read>btn a</read>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>2</to>
+			<read>btn b</read>
+		</transition>
+		<transition>
+			<from>13</from>
+			<to>1</to>
+			<read>termina animacion</read>
+		</transition>
+		<transition>
+			<from>1</from>
+			<to>13</to>
+			<read>arriba + btn a</read>
+		</transition>
+		<transition>
+			<from>9</from>
+			<to>12</to>
+			<controlx>447</controlx>
+			<controly>79</controly>
+			<read>abajo</read>
+		</transition>
+		<transition>
+			<from>5</from>
+			<to>8</to>
+			<read>termina animacion</read>
+		</transition>
+		<transition>
+			<from>11</from>
+			<to>15</to>
+			<read>btn a</read>
+		</transition>
+		<transition>
+			<from>0</from>
+			<to>1</to>
+			<read>derecha</read>
+		</transition>
+		<transition>
+			<from>2</from>
+			<to>14</to>
+			<read>arriba + btn a</read>
+		</transition>
+		<transition>
+			<from>14</from>
+			<to>2</to>
+			<read>termina animacion</read>
+		</transition>
+		<transition>
+			<from>6</from>
+			<to>3</to>
+			<read>termina animacion</read>
+		</transition>
+		<transition>
+			<from>12</from>
+			<to>9</to>
+			<read>soltar abajo</read>
+		</transition>
+		<transition>
+			<from>4</from>
+			<to>5</to>
+			<read>btn a</read>
+		</transition>
+		<transition>
+			<from>10</from>
+			<to>2</to>
+			<read>btn b</read>
+		</transition>
+	</automaton>
+</structure>
