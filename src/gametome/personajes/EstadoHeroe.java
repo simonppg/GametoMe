@@ -26,7 +26,8 @@ public class EstadoHeroe {
      */
     enum Estado {
         dePie,
-        corriendo
+        corriendo,
+        incado
     }
     enum Direccion {
         Izquierda, 

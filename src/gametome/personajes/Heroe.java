@@ -141,31 +141,44 @@ public class Heroe {
         //TODO verificar colicion con otros objetos
         //Calcula la velocidad de movimiento o frenado a la izquierda
         if(Panel.keyboardKeyState(KeyEvent.VK_A)){
-            velocidadX -= velocidadAceleracionX;
-            estadoHeroe = Estado.corriendo;
+            if(estadoHeroe != Estado.incado){
+                velocidadX -= velocidadAceleracionX;
+                estadoHeroe = Estado.corriendo;
+            }
             direccionHeroe = Direccion.Izquierda;
         }
         else
         {
             if(velocidadX < 0)
                 velocidadX += velocidadDetenerX;
+            else
+                if(velocidadX == 0 && estadoHeroe != Estado.incado){
+                    estadoHeroe  = Estado.dePie;
+                }
         }
         //TODO verificar colicion con otros objetos
         //Calcula la velocidad de movimiento o frenado a la derecha
         if(Panel.keyboardKeyState(KeyEvent.VK_D)){
-            velocidadX += velocidadAceleracionX;
-            estadoHeroe = Estado.corriendo;
+            if(estadoHeroe != Estado.incado){
+                velocidadX += velocidadAceleracionX;
+                estadoHeroe = Estado.corriendo;
+            }
             direccionHeroe = Direccion.Derecha;
         }
         else
         {
             if(velocidadX > 0)
                 velocidadX -= velocidadDetenerX;
+            else
+                if(velocidadX == 0  && estadoHeroe != Estado.incado){
+                    estadoHeroe  = Estado.dePie;
+                }
         }
         
         if(Panel.keyboardKeyState(KeyEvent.VK_NUMPAD2))
         {
-            saltoHeroe = Otro.saltando;
+            if(estadoHeroe != Estado.incado)
+                saltoHeroe = Otro.saltando;
         }
         
         if(saltoHeroe == Otro.saltando){
@@ -191,6 +204,21 @@ public class Heroe {
             cont = 0;
         }
         
+        if(Panel.keyboardKeyState(KeyEvent.VK_S))
+        {
+            if(estadoHeroe == Estado.dePie && saltoHeroe != Otro.saltando){
+                estadoHeroe = Estado.incado;
+                //Hacer que toque el suelo
+                y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(6).getImgAlto();
+            }
+        }
+        else{
+            if(estadoHeroe == Estado.incado){
+                estadoHeroe = Estado.dePie;
+                y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
+            }
+        }
+        
         //Boton de Ataque
         if(Panel.keyboardKeyState(KeyEvent.VK_NUMPAD1))
         {
@@ -213,10 +241,6 @@ public class Heroe {
         // Mueve al heroe
         x += velocidadX;
         y += velocidadY;
-        //Esta condicion tienen que cambiar porque colgado pampoco se esta moviendo
-        if(velocidadX == 0 && velocidadY == 0){
-            estadoHeroe  = Estado.dePie;
-        }
     }
     
     int salto = 0;
@@ -225,7 +249,6 @@ public class Heroe {
     public void Draw(Graphics2D g2d)
     {
         //TODO Dibujar al personaje
-        
         if(saltoHeroe == Otro.saltando){
             if(ataqueHeroe == Ataque.espada)
             {
@@ -242,11 +265,11 @@ public class Heroe {
                     long currenTime = System.currentTimeMillis() - startTime;
                     g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
                     if((currenTime * 100) / tiempoAnimacion <= 33.33)
-                        g2d.drawImage(img.get(14).getImagen(), -x-img.get(26).getImgAncho(), y, null);
+                        g2d.drawImage(img.get(14).getImagen(), -x-img.get(0).getImgAncho(), y, null);
                     else if((currenTime * 100) / tiempoAnimacion <= 66.66)
-                        g2d.drawImage(img.get(15).getImagen(), -x-img.get(27).getImgAncho(), y, null);
+                        g2d.drawImage(img.get(15).getImagen(), -x-img.get(0).getImgAncho(), y, null);
                     else if((currenTime * 100) / tiempoAnimacion <= 100)
-                        g2d.drawImage(img.get(16).getImagen(), -x-img.get(28).getImgAncho(), y, null);
+                        g2d.drawImage(img.get(16).getImagen(), -x-img.get(0).getImgAncho(), y, null);
                 }
             }
             else{
@@ -274,7 +297,7 @@ public class Heroe {
         //
         if((ataqueHeroe == Ataque.espada ||
                 estadoHeroe == Estado.corriendo ||
-                estadoHeroe == Estado.dePie) && saltoHeroe != Otro.saltando)
+                estadoHeroe == Estado.dePie) && saltoHeroe != Otro.saltando && estadoHeroe != Estado.incado)
         {
             //Ataque de espada
             if(ataqueHeroe == Ataque.espada)
@@ -292,11 +315,11 @@ public class Heroe {
                     long currenTime = System.currentTimeMillis() - startTime;
                     g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
                     if((currenTime * 100) / tiempoAnimacion <= 33.33)
-                        g2d.drawImage(img.get(1).getImagen(), -x-img.get(26).getImgAncho(), y, null);
+                        g2d.drawImage(img.get(1).getImagen(), -x-img.get(0).getImgAncho(), y, null);
                     else if((currenTime * 100) / tiempoAnimacion <= 66.66)
-                        g2d.drawImage(img.get(2).getImagen(), -x-img.get(27).getImgAncho(), y, null);
+                        g2d.drawImage(img.get(2).getImagen(), -x-img.get(0).getImgAncho(), y, null);
                     else if((currenTime * 100) / tiempoAnimacion <= 100)
-                        g2d.drawImage(img.get(3).getImagen(), -x-img.get(28).getImgAncho(), y, null);
+                        g2d.drawImage(img.get(3).getImagen(), -x-img.get(0).getImgAncho(), y, null);
                 }
             }
             //Corriendo y Frenando derecha
@@ -323,15 +346,15 @@ public class Heroe {
                     g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
                     switch(corre){
                         case 0:
-                            g2d.drawImage(img.get(26).getImagen(), -x-img.get(26).getImgAncho(), y, null);
+                            g2d.drawImage(img.get(26).getImagen(), -x-img.get(0).getImgAncho(), y, null);
                             corre++;
                             break;
                         case 1:
-                            g2d.drawImage(img.get(27).getImagen(), -x-img.get(27).getImgAncho(), y, null);
+                            g2d.drawImage(img.get(27).getImagen(), -x-img.get(0).getImgAncho(), y, null);
                             corre++;
                             break;
                         case 2:
-                            g2d.drawImage(img.get(28).getImagen(), -x-img.get(28).getImgAncho(), y, null);
+                            g2d.drawImage(img.get(28).getImagen(), -x-img.get(0).getImgAncho(), y, null);
                             corre=0;
                             break;
                     }
@@ -348,6 +371,38 @@ public class Heroe {
                 }
             }
         }
+        if(estadoHeroe == Estado.incado){
+            if(ataqueHeroe == Ataque.espada){
+                if(direccionHeroe == Direccion.Derecha){
+                    long currenTime = System.currentTimeMillis() - startTime;
+                    if((currenTime * 100) / tiempoAnimacion <= 33.33)
+                        g2d.drawImage(img.get(7).getImagen(), x, y, null);
+                    else if((currenTime * 100) / tiempoAnimacion <= 66.66)
+                        g2d.drawImage(img.get(8).getImagen(), x, y, null);
+                    else if((currenTime * 100) / tiempoAnimacion <= 100)
+                        g2d.drawImage(img.get(9).getImagen(), x, y, null);
+                }
+                if(direccionHeroe == Direccion.Izquierda){
+                    long currenTime = System.currentTimeMillis() - startTime;
+                    g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
+                    if((currenTime * 100) / tiempoAnimacion <= 33.33)
+                        g2d.drawImage(img.get(7).getImagen(), -x-img.get(0).getImgAncho(), y, null);
+                    else if((currenTime * 100) / tiempoAnimacion <= 66.66)
+                        g2d.drawImage(img.get(8).getImagen(), -x-img.get(0).getImgAncho(), y, null);
+                    else if((currenTime * 100) / tiempoAnimacion <= 100)
+                        g2d.drawImage(img.get(9).getImagen(), -x-img.get(0).getImgAncho(), y, null);
+                }
+            }
+            else{
+                if(direccionHeroe  == Direccion.Derecha){
+                    g2d.drawImage(img.get(6).getImagen(), x, y, null);
+                }
+                if(direccionHeroe == Direccion.Izquierda){
+                    g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
+                    g2d.drawImage(img.get(6).getImagen(), -x-img.get(0).getImgAncho(), y, null);
+                }
+            }
+        }
         
         g2d.setTransform(AffineTransform.getScaleInstance(1, 1));
         g2d.setColor(Color.white);
@@ -356,5 +411,7 @@ public class Heroe {
         g2d.drawString("Direccion: " + direccionHeroe, 5, 60);
         g2d.drawString("Salto: " + saltoHeroe, 5, 75);
         g2d.drawString("Ataque: " + ataqueHeroe, 5, 90);
+        g2d.setColor(Color.red);
+        g2d.drawOval(x-2, y-2, 4, 4);
     }
 }
