@@ -16,6 +16,7 @@
  */
 package gametome;
 
+import gametome.personajes.Enemigo;
 import gametome.personajes.Heroe;
 
 import java.awt.Graphics2D;
@@ -55,6 +56,10 @@ public class Juego {
      * Heroe del juego. Clase de nuestro heroe.
      */
     private Heroe heroe;
+    /**
+     * Enemigo.
+     */
+    private Enemigo enemigo;
     
 
     public Juego()
@@ -83,13 +88,15 @@ public class Juego {
     {
         landingArea  = new LandingArea();
         heroe = new Heroe();
+        
+        enemigo = new Enemigo();
     }
     
     /**
      * Load game files - images, sounds, ...
      */
     private void LoadContent()
-    {
+    {   
         try
         {
             URL backgroundImgUrl = this.getClass().getResource("/resources/images/background.jpg");
@@ -123,6 +130,8 @@ public class Juego {
         //TODO update de los objetos en la escena
         heroe.Update();
         
+        enemigo.Update();
+        
         //TODO fisica del juego
         
         //TODO verifical si debe cambiar el estado del juego (pause, fin, gana, nueva escena, etc..)
@@ -144,6 +153,8 @@ public class Juego {
         landingArea.Draw(g2d);
         
         heroe.Draw(g2d);
+        
+        enemigo.Draw(g2d);
     }
     
     

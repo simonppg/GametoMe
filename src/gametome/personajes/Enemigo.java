@@ -42,17 +42,17 @@ import javax.imageio.ImageIO;
  * Heroe controla los movimientos y el dibujado del personaje.
  * @author simonppg
  */
-public class Heroe {
+public class Enemigo {
     //TODO faltan los topes de velocidad.
     
     /**
      * coordenada X del heroe.
      */
-    public static int x;
+    public int x;
     /**
      * coordenada Y del heroe.
      */
-    public static int y;
+    public int y;
     /**
      * Velocidad en X.
      */
@@ -88,10 +88,10 @@ public class Heroe {
     /**
      * Estado del Heroe. actual.
      */
-    public Estado estadoHeroe;
-    public Direccion direccionHeroe;
-    public Otro saltoHeroe;
-    public Ataque ataqueHeroe;
+    public Estado estadoEnemigo;
+    public Direccion direccionEnemigo;
+    public Otro saltoEnemigo;
+    public Ataque ataqueEnemigo;
     /**
      * Lista de imagenes. acciones.
      */
@@ -103,26 +103,26 @@ public class Heroe {
      * alarma. mide el tiempo.
      */
 
-    public Heroe() {
+    public Enemigo() {
         Initialize();
         LoadContent();
         
         x = 400;
-        y = img.get(0).getImgAlto();
+        y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
     }
 
     private void Initialize() {
         //TODO Inicializar variables.
         img = new ArrayList<Imagen>();
-        estadoHeroe = Estado.dePie;
-        direccionHeroe = Direccion.Derecha;
-        saltoHeroe = Otro.saltando;
-        ataqueHeroe = Ataque.nada;
+        estadoEnemigo = Estado.dePie;
+        direccionEnemigo = Direccion.Derecha;
+        saltoEnemigo = Otro.nada;
+        ataqueEnemigo = Ataque.nada;
         velocidadAceleracionY = 5;
         velocidadDetenerY = 10;
         //Deacuerdo a la logica de desplazamiento estas variables deben ser iguales
         velocidadAceleracionX = velocidadDetenerX = 1;
-        velocidadMax = 12;
+        velocidadMax = 10;
     }
 
     private void LoadContent() {
@@ -143,104 +143,34 @@ public class Heroe {
     int cont=0;
     public void Update(){
         //TODO Logica del heroe
-        //TODO verificar colicion con otros objetos
-        //Calcula la velocidad de movimiento o frenado a la izquierda
-        if(Panel.keyboardKeyState(KeyEvent.VK_A)){
-            if(estadoHeroe != Estado.incado){
-                velocidadX -= velocidadAceleracionX;
-                if(velocidadX < velocidadMax*-1)
-                    velocidadX = velocidadMax*-1;
-                estadoHeroe = Estado.corriendo;
-            }
-            direccionHeroe = Direccion.Izquierda;
+        //TODO verificar colicion con otros objetos        
+        if(x > Heroe.x){
+            estadoEnemigo = Estado.corriendo;
+            direccionEnemigo = Direccion.Izquierda;
+            velocidadX--;
+            if(velocidadX < velocidadMax*-1)
+                velocidadX = velocidadMax*-1;
         }
-        else
-        {
-            if(velocidadX < 0)
-                velocidadX += velocidadDetenerX;
-            else
-                if(velocidadX == 0 && estadoHeroe != Estado.incado){
-                    estadoHeroe  = Estado.dePie;
-                }
-        }
-        //TODO verificar colicion con otros objetos
-        //Calcula la velocidad de movimiento o frenado a la derecha
-        if(Panel.keyboardKeyState(KeyEvent.VK_D)){
-            if(estadoHeroe != Estado.incado){
-                velocidadX += velocidadAceleracionX;
-                if(velocidadX > velocidadMax)
-                    velocidadX = velocidadMax;
-                estadoHeroe = Estado.corriendo;
-            }
-            direccionHeroe = Direccion.Derecha;
-        }
-        else
-        {
-            if(velocidadX > 0)
-                velocidadX -= velocidadDetenerX;
-            else
-                if(velocidadX == 0  && estadoHeroe != Estado.incado){
-                    estadoHeroe  = Estado.dePie;
-                }
+        else if(x< Heroe.x){
+            estadoEnemigo = Estado.corriendo;
+            direccionEnemigo = Direccion.Derecha;
+            velocidadX++;
+            if(velocidadX > velocidadMax)
+                velocidadX = velocidadMax;
         }
         
-        if(Panel.keyboardKeyState(KeyEvent.VK_NUMPAD2))
+        if((x > Heroe.x?x-Heroe.x:Heroe.x-x) < 100)
         {
-            if(estadoHeroe != Estado.incado)
-                saltoHeroe = Otro.saltando;
-        }
-        
-        if(saltoHeroe == Otro.saltando){
-            //duracion de la animacion de salto
-            if(cont < 7) {
-                velocidadY -= velocidadAceleracionY;
-                cont++;
-            }
-            else {//TODO verificar colicion con otros objetos
-                if(y + velocidadY +velocidadDetenerY > (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto()) {
-                    velocidadY = 0;
-                    y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
-                    saltoHeroe = Otro.nada;
-                }
-                else {
-                    velocidadY += velocidadDetenerY;
-                }
-            }
-        }
-        else
-        {
-            velocidadY = 0;
-            cont = 0;
-        }
-        
-        if(Panel.keyboardKeyState(KeyEvent.VK_S))
-        {
-            if(estadoHeroe == Estado.dePie && saltoHeroe != Otro.saltando){
-                estadoHeroe = Estado.incado;
-                //Hacer que toque el suelo
-                y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(6).getImgAlto();
-            }
-        }
-        else{
-            if(estadoHeroe == Estado.incado){
-                estadoHeroe = Estado.dePie;
-                y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
-            }
-        }
-        
-        //Boton de Ataque
-        if(Panel.keyboardKeyState(KeyEvent.VK_NUMPAD1))
-        {
-            if(ataqueHeroe != Ataque.espada)
+            if(ataqueEnemigo != Ataque.espada)
             {
-                ataqueHeroe = Ataque.espada;
+                ataqueEnemigo = Ataque.espada;
                 startTime = System.currentTimeMillis();
                 //System.out.println("Inicio animacion");
                 Alarma a = new Alarma(tiempoAnimacion, new Callable() {
                     @Override
                     public Object call() throws Exception {
                         //System.out.println("Fin animacion");
-                        ataqueHeroe = Ataque.nada;
+                        ataqueEnemigo = Ataque.nada;
                         return null;
                     }
                 });
@@ -258,10 +188,10 @@ public class Heroe {
     public void Draw(Graphics2D g2d)
     {
         //TODO Dibujar al personaje
-        if(saltoHeroe == Otro.saltando){
-            if(ataqueHeroe == Ataque.espada)
+        if(saltoEnemigo == Otro.saltando){
+            if(ataqueEnemigo == Ataque.espada)
             {
-                if(direccionHeroe == Direccion.Derecha){
+                if(direccionEnemigo == Direccion.Derecha){
                     long currenTime = System.currentTimeMillis() - startTime;
                     if((currenTime * 100) / tiempoAnimacion <= 33.33)
                         g2d.drawImage(img.get(14).getImagen(), x, y, null);
@@ -270,7 +200,7 @@ public class Heroe {
                     else if((currenTime * 100) / tiempoAnimacion <= 100)
                         g2d.drawImage(img.get(16).getImagen(), x, y, null);
                 }
-                if(direccionHeroe == Direccion.Izquierda){
+                if(direccionEnemigo == Direccion.Izquierda){
                     long currenTime = System.currentTimeMillis() - startTime;
                     g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
                     if((currenTime * 100) / tiempoAnimacion <= 33.33)
@@ -304,14 +234,14 @@ public class Heroe {
             
         }
         //
-        if((ataqueHeroe == Ataque.espada ||
-                estadoHeroe == Estado.corriendo ||
-                estadoHeroe == Estado.dePie) && saltoHeroe != Otro.saltando && estadoHeroe != Estado.incado)
+        if((ataqueEnemigo == Ataque.espada ||
+                estadoEnemigo == Estado.corriendo ||
+                estadoEnemigo == Estado.dePie) && saltoEnemigo != Otro.saltando && estadoEnemigo != Estado.incado)
         {
             //Ataque de espada
-            if(ataqueHeroe == Ataque.espada)
+            if(ataqueEnemigo == Ataque.espada)
             {
-                if(direccionHeroe == Direccion.Derecha){
+                if(direccionEnemigo == Direccion.Derecha){
                     long currenTime = System.currentTimeMillis() - startTime;
                     if((currenTime * 100) / tiempoAnimacion <= 33.33)
                         g2d.drawImage(img.get(1).getImagen(), x, y, null);
@@ -320,7 +250,7 @@ public class Heroe {
                     else if((currenTime * 100) / tiempoAnimacion <= 100)
                         g2d.drawImage(img.get(3).getImagen(), x, y, null);
                 }
-                if(direccionHeroe == Direccion.Izquierda){
+                if(direccionEnemigo == Direccion.Izquierda){
                     long currenTime = System.currentTimeMillis() - startTime;
                     g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
                     if((currenTime * 100) / tiempoAnimacion <= 33.33)
@@ -332,8 +262,8 @@ public class Heroe {
                 }
             }
             //Corriendo y Frenando derecha
-            else if(estadoHeroe == Estado.corriendo){
-                if(direccionHeroe == Direccion.Derecha)
+            else if(estadoEnemigo == Estado.corriendo){
+                if(direccionEnemigo == Direccion.Derecha)
                 {
                     switch(corre){
                         case 0:
@@ -350,7 +280,7 @@ public class Heroe {
                             break;
                     }
                 }
-                if(direccionHeroe == Direccion.Izquierda)
+                if(direccionEnemigo == Direccion.Izquierda)
                 {
                     g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
                     switch(corre){
@@ -369,20 +299,20 @@ public class Heroe {
                     }
                 }
             }
-            else if(estadoHeroe == Estado.dePie)
+            else if(estadoEnemigo == Estado.dePie)
             {
-                if(direccionHeroe  == Direccion.Derecha){
+                if(direccionEnemigo  == Direccion.Derecha){
                     g2d.drawImage(img.get(0).getImagen(), x, y, null);
                 }
-                if(direccionHeroe == Direccion.Izquierda){
+                if(direccionEnemigo == Direccion.Izquierda){
                     g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
                     g2d.drawImage(img.get(0).getImagen(), -x-img.get(0).getImgAncho(), y, null);
                 }
             }
         }
-        if(estadoHeroe == Estado.incado){
-            if(ataqueHeroe == Ataque.espada){
-                if(direccionHeroe == Direccion.Derecha){
+        if(estadoEnemigo == Estado.incado){
+            if(ataqueEnemigo == Ataque.espada){
+                if(direccionEnemigo == Direccion.Derecha){
                     long currenTime = System.currentTimeMillis() - startTime;
                     if((currenTime * 100) / tiempoAnimacion <= 33.33)
                         g2d.drawImage(img.get(7).getImagen(), x, y, null);
@@ -391,7 +321,7 @@ public class Heroe {
                     else if((currenTime * 100) / tiempoAnimacion <= 100)
                         g2d.drawImage(img.get(9).getImagen(), x, y, null);
                 }
-                if(direccionHeroe == Direccion.Izquierda){
+                if(direccionEnemigo == Direccion.Izquierda){
                     long currenTime = System.currentTimeMillis() - startTime;
                     g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
                     if((currenTime * 100) / tiempoAnimacion <= 33.33)
@@ -403,10 +333,10 @@ public class Heroe {
                 }
             }
             else{
-                if(direccionHeroe  == Direccion.Derecha){
+                if(direccionEnemigo  == Direccion.Derecha){
                     g2d.drawImage(img.get(6).getImagen(), x, y, null);
                 }
-                if(direccionHeroe == Direccion.Izquierda){
+                if(direccionEnemigo == Direccion.Izquierda){
                     g2d.setTransform(AffineTransform.getScaleInstance(-1, 1));
                     g2d.drawImage(img.get(6).getImagen(), -x-img.get(0).getImgAncho(), y, null);
                 }
@@ -415,12 +345,10 @@ public class Heroe {
         
         g2d.setTransform(AffineTransform.getScaleInstance(1, 1));
         g2d.setColor(Color.white);
-        g2d.drawString("Heroe coordinates: " + x + " : " + y, 5, 15);        
-        g2d.drawString("Estado: " + estadoHeroe, 5, 45);
-        g2d.drawString("Direccion: " + direccionHeroe, 5, 60);
-        g2d.drawString("Salto: " + saltoHeroe, 5, 75);
-        g2d.drawString("Ataque: " + ataqueHeroe, 5, 90);
-        g2d.setColor(Color.red);
-        g2d.drawOval(x-2, y-2, 4, 4);
+        g2d.drawString("Enemigo coordinates: " + x + " : " + y, 400, 15);        
+        g2d.drawString("Estado: " + estadoEnemigo, 400, 45);
+        g2d.drawString("Direccion: " + direccionEnemigo, 400, 60);
+        g2d.drawString("Salto: " + saltoEnemigo, 400, 75);
+        g2d.drawString("Ataque: " + ataqueEnemigo, 400, 90);
     }
 }
