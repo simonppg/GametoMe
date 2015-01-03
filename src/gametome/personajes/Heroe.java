@@ -98,6 +98,10 @@ public class Heroe {
     private ArrayList<Imagen> img;
     private int tiempoAnimacion = 300;
     private long startTime;
+    /**
+     * Tiempo inicial para la animacion de salto
+     */
+    private long startTimeSalto;
     
     /**
      * alarma. mide el tiempo.
@@ -108,7 +112,7 @@ public class Heroe {
         LoadContent();
         
         x = 400;
-        y = img.get(0).getImgAlto();
+        y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
     }
 
     private void Initialize() {
@@ -116,7 +120,7 @@ public class Heroe {
         img = new ArrayList<Imagen>();
         estadoHeroe = Estado.dePie;
         direccionHeroe = Direccion.Derecha;
-        saltoHeroe = Otro.saltando;
+        saltoHeroe = Otro.nada;
         ataqueHeroe = Ataque.nada;
         velocidadAceleracionY = 5;
         velocidadDetenerY = 10;
@@ -186,31 +190,22 @@ public class Heroe {
         
         if(Panel.keyboardKeyState(KeyEvent.VK_NUMPAD2))
         {
-            if(estadoHeroe != Estado.incado)
+            if(estadoHeroe != Estado.incado && saltoHeroe != Otro.saltando){
                 saltoHeroe = Otro.saltando;
+                startTimeSalto = System.currentTimeMillis();
+            }
         }
         
         if(saltoHeroe == Otro.saltando){
             //duracion de la animacion de salto
-            if(cont < 7) {
-                velocidadY -= velocidadAceleracionY;
-                cont++;
+            long diff = (System.currentTimeMillis()-startTimeSalto)/100;//el 100 es para hacer la animacion visible, para ir mas lento
+            velocidadY = (int) (-1*(30 -9.81 * diff));
+            y += velocidadY;
+            if(y > (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto()) {
+                velocidadY = 0;
+                y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
+                saltoHeroe = Otro.nada;
             }
-            else {//TODO verificar colicion con otros objetos
-                if(y + velocidadY +velocidadDetenerY > (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto()) {
-                    velocidadY = 0;
-                    y = (int) (FlujoDelJuego.frameHeight * 0.88) - img.get(0).getImgAlto();
-                    saltoHeroe = Otro.nada;
-                }
-                else {
-                    velocidadY += velocidadDetenerY;
-                }
-            }
-        }
-        else
-        {
-            velocidadY = 0;
-            cont = 0;
         }
         
         if(Panel.keyboardKeyState(KeyEvent.VK_S))

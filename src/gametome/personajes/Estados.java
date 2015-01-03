@@ -17,7 +17,7 @@
 package gametome.personajes;
 
 /**
- * EstadoHeroe contendra todos los estados del Heroe.
+ * EstadoHeroe contiene todos los estados del Heroe.
  * @author simonppg
  */
 public class Estados {
