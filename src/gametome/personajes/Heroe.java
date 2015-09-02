@@ -188,7 +188,7 @@ public class Heroe {
                 }
         }
         
-        if(Panel.keyboardKeyState(KeyEvent.VK_NUMPAD2))
+        if(Panel.keyboardKeyState(KeyEvent.VK_SPACE))
         {
             if(estadoHeroe != Estado.incado && saltoHeroe != Otro.saltando){
                 saltoHeroe = Otro.saltando;
@@ -224,7 +224,7 @@ public class Heroe {
         }
         
         //Boton de Ataque
-        if(Panel.keyboardKeyState(KeyEvent.VK_NUMPAD1))
+        if(Panel.keyboardKeyState(KeyEvent.VK_PERIOD))
         {
             if(ataqueHeroe != Ataque.espada)
             {

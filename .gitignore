@@ -12,3 +12,5 @@
 hs_err_pid*
 /GametoMe-master/nbproject/private/
 /dist/
+/nbproject/private/
+/build/
